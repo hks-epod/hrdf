@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Saudization</title>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="http://d3js.org/topojson.v1.min.js"></script>
+		<style type="text/css">
+
+			circle:hover {
+				fill: orange;
+			}
+
+			#tooltip {
+				position: absolute;
+				width: 230px;
+				height: auto;
+				padding: 10px;
+				background-color: white;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				border-radius: 10px;
+				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+				pointer-events: none;
+			}
+			
+			#tooltip.hidden {
+				display: none;
+			}
+			
+			#tooltip p {
+				margin: 0;
+				font-family: sans-serif;
+				font-size: 16px;
+				line-height: 20px;
+			}
+
+			.title {
+			  font: 300 78px Helvetica;
+			  fill: #666;
+			}
+
+
+
+		</style>
+	</head>
+	<body>
+		<div id="tooltip" class="hidden" style="left: 429px, top: 489.6px">
+			<p><strong><span id="city">Riyadh</span></strong></p>
+			<p id="population">Population: XXX million</p>
+		</div>
+		<script type="text/javascript">
+
+			var w = 800;
+			var h = 500;
+
+			//so ugly. i need to learn the bounded bands thing.
+			var projection = d3.geo.mercator()
+				.rotate([-50,0])
+				.translate([w/2, h/2])
+				.scale([600]);
+
+
+			var path = d3.geo.path()
+				.projection(projection);
+
+
+			var svg = d3.select("body")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h);
+
+			var title = svg.append("text")
+					    .attr("class", "title")
+					    .attr("dy", (h-50) + "px")
+					    .attr("dx", "40px");
+					    // .text(year);
+
+			var comma = d3.format(",");
+
+			function mouseover(d) {
+
+				d3.select(this).style("fill", "orange");
+
+				var mousecoord = [0,0];
+				mousecoord = d3.mouse(this);
+
+				d3.select("#tooltip")
+					.style("left", mousecoord[0] + "px")
+					.style("top", mousecoord[1]-75 + "px");
+
+				d3.select("#city")
+					.text(d.city);
+
+				d3.select("#population")
+					.text(function () { return year + " population: " + comma(d["y"+year]); });
+				   
+				d3.select("#tooltip").classed("hidden", false);
+			};
+
+			function mouseout(d) {
+				d3.select(this).style("fill", "gold");
+				d3.select("#tooltip").classed("hidden", true);
+			};
+
+			function yearmax(year) {
+				if (year > 2002) {
+					return Math.max(2002, year-10);
+				} else if (year==2002) {
+					return 1988
+				} else {	
+					return Math.max(year0, year-10);
+				}
+			};
+
+			function yearmin(year) {
+				if (year > 2000) {
+					return Math.min(year1, year+10);
+				} else if (year==1988) {
+					return 2002
+				} else {
+					return Math.min(1988, year+10);
+				}
+			};
+
+
+			//Data
+			d3.json("_geo/saudi_comp.json", function(json) {
+
+				var provinces = topojson.feature(json, json.objects.saudi);
+				console.log(provinces);
+				
+				svg.selectAll("path")
+				   .data(provinces.features)
+				   .enter()
+				   .append("path")
+				   .attr("d", path)
+				   .attr("class", function(d) { 
+				   		console.log(d);
+				   		return "province " + d.id; 
+				   	})
+				   .style("fill", "steelblue");
+		
+					// d3.csv("TZcitygeo.csv", function(data) {
+
+					// 	svg.selectAll("circle")
+					// 	   .data(data)
+					// 	   .enter()
+					// 	   .append("circle")
+					// 		   .attr("cx", function(d) {
+					// 			   return projection([d.lon, d.lat])[0];
+					// 		   })
+					// 		   .attr("cy", function(d) {
+					// 			   return projection([d.lon, d.lat])[1];
+					// 		   })
+					// 		   .attr("r", function(d) {
+					// 		   		return Math.sqrt(parseInt(d["y"+year]) * 0.0004);			
+					// 		   })
+					// 		   .style("fill", "gold")
+					// 		   .style("opacity", 0.75)
+
+					// 	   .on("mouseover", mouseover)
+					// 	   .on("mouseout", mouseout);
+
+						  
+				// //Transition to 2002! and beyond...
+
+				// d3.select(window).on("keydown", function() {
+				// 	switch (d3.event.keyCode) {
+				// 	case 37: year = yearmax(year); break;
+				// 	case 39: year = yearmin(year); break;
+				// 	}
+				// 	update ();
+				// });
+
+				// function update() {
+
+				// title.text(year);
+
+				// svg.selectAll("circle")
+				// 	.transition(1500)
+				// 	.attr("r", function(d) {
+				// 	return Math.sqrt(parseInt(d["y"+year]) * 0.0004);  
+				// 		});
+				
+				// };
+
+
+
+				// 	}); //csv closer
+
+			}); //json closer
+
+						
+
+			
+		</script>
+	</body>
+</html>
