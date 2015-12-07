@@ -13,7 +13,7 @@
 
 			#tooltip {
 				position: absolute;
-				width: 230px;
+				width: 250px;
 				height: auto;
 				padding: 10px;
 				background-color: white;
@@ -48,13 +48,15 @@
 	<body>
 		<div id="tooltip" class="hidden" style="left: 429px, top: 489.6px">
 			<p><strong><span id="provinceName">Riyadh</span></strong></p>
-			<p id="population">Population: XXX million</p>
+			<p>Saudi workforce: <span id="saudi">XXX</span></p>
+			<p>Non-Saudi workforce: <span id="expats">XXX</span></p>
 		</div>
 		<script type="text/javascript">
 
 		function mouseover(d) {
 
-				d3.select(this).style("fill", "orange");
+				// d3.select(this).style("fill", "orange");
+				var comma = d3.format(",");
 
 				var mousecoord = [0,0];
 				mousecoord = d3.mouse(this);
@@ -64,19 +66,22 @@
 					.style("top", mousecoord[1]-75 + "px");
 
 				d3.select("#provinceName")
-					.text(d.id);
+					.text(d.capital);
 
-				// d3.select("#population")
-				// 	.text(function () { return year + " population: " + comma(d["y"+year]); });
-				   
+				d3.select("#saudi")
+					.text(comma(d.Saudi));
+
+				d3.select("#expats")
+					.text(comma(d['Non-Saudi']));
+
 				d3.select("#tooltip").classed("hidden", false);
 		};
 
 		function mouseout(d) {
-				d3.select(this).style("fill", "#66cc99");
+				// d3.select(this).style("fill", "#66cc99");
 				d3.select("#tooltip").classed("hidden", true);
 		};
-
+ 
 		function drawMap(json) {
 
 			var w = 800;
@@ -87,7 +92,7 @@
 			var projection = d3.geo.mercator()
 				.center([0, 24])
 				.rotate([-45, 0])
-				.scale(1200)
+				.scale(1500)
 				.translate([w/2, h/2]);
 
 			var path = d3.geo.path()
@@ -101,7 +106,6 @@
 			var comma = d3.format(",");
 
 			var provinces = topojson.feature(json, json.objects.saudi);
-			console.log(provinces);
 				
 			svg.selectAll("path")
 			   .data(provinces.features)
@@ -111,10 +115,65 @@
 			   .attr("class", "province")
 			   .attr("id", function(d) { return d.id; })
 			   .style("fill", "#66cc99")
-			   .style("stroke-width", "0.5px")
-			   .style("stroke", "white")
-			   .on("mouseover", mouseover)
-			   .on("mouseout", mouseout);
+			   .style("stroke-width", "0.75px")
+			   .style("stroke-dasharray", "3,3")
+			   .style("stroke", "white");
+
+
+				function drawCities(csv) {
+
+					var size = d3.scale.sqrt()
+						.domain([1, d3.max(csv, function(d) { return d.Total; })])
+						.range([2, 25]);
+
+					var capitals = svg.selectAll("g")
+						.data(csv)
+						.enter()
+						.append("g")
+						.attr("id", function(d) { return d.capital; })
+						.attr("class", "capitals")
+						.on("mouseover", mouseover)
+			   			.on("mouseout", mouseout);
+
+					// SAUDI
+				   	capitals.append("circle")
+				   		.attr("cx", function(d) {
+				   			return projection([d.lon, d.lat])[0];
+				   		})
+				   		.attr("cy", function(d) {
+				   			return projection([d.lon, d.lat])[1];
+				   		})
+				   		.attr("r", function(d) {
+				   			return size(d.Saudi);
+				   		})
+				   		// .style("stroke-width", "1.5px")
+				   		// .style("stroke", "#ac3973")
+				   		.style("fill", "#cc6699")
+				   		.style("opacity", 0.6);
+
+
+				   	// NON-SAUDI
+				   	capitals.append("circle")
+				   		.attr("cx", function(d) {
+				   			return projection([d.lon, d.lat])[0];
+				   		})
+				   		.attr("cy", function(d) {
+				   			return projection([d.lon, d.lat])[1];
+				   		})
+				   		.attr("r", function(d) {
+				   			return size(d['Non-Saudi']);
+				   		})
+				   		// .style("stroke-width", "1.5px")
+				   		// .style("stroke", "#ac3973")
+				   		.style("fill", "#3973ac")
+				   		.style("opacity", 0.6);
+
+
+
+				}
+
+
+			   d3.csv("_data/capitals.csv", drawCities);
 
 					// d3.csv("TZcitygeo.csv", function(data) {
 
