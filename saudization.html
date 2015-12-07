@@ -84,7 +84,7 @@
  
 		function drawMap(json) {
 
-			var w = 800;
+			var w = 1200;
 			var h = 500;
 
 			// Rotating the Earth here...
@@ -93,7 +93,7 @@
 				.center([0, 24])
 				.rotate([-45, 0])
 				.scale(1500)
-				.translate([w/2, h/2]);
+				.translate([w/3, h/2]);
 
 			var path = d3.geo.path()
 				.projection(projection);
@@ -103,11 +103,15 @@
 				.attr("width", w)
 				.attr("height", h);
 
+			var map = d3.select("svg")
+				.append("g")
+				.attr("class", "map")
+
 			var comma = d3.format(",");
 
 			var provinces = topojson.feature(json, json.objects.saudi);
 				
-			svg.selectAll("path")
+			map.selectAll("path")
 			   .data(provinces.features)
 			   .enter()
 			   .append("path")
@@ -122,11 +126,11 @@
 
 				function drawCities(csv) {
 
-					var size = d3.scale.sqrt()
+					var radius = d3.scale.sqrt()
 						.domain([1, d3.max(csv, function(d) { return d.Total; })])
 						.range([2, 25]);
 
-					var capitals = svg.selectAll("g")
+					var capitals = map.selectAll("g")
 						.data(csv)
 						.enter()
 						.append("g")
@@ -144,10 +148,9 @@
 				   			return projection([d.lon, d.lat])[1];
 				   		})
 				   		.attr("r", function(d) {
-				   			return size(d.Saudi);
+				   			return radius(d.Saudi);
 				   		})
-				   		// .style("stroke-width", "1.5px")
-				   		// .style("stroke", "#ac3973")
+				   		.attr("class", "Saudi")
 				   		.style("fill", "#cc6699")
 				   		.style("opacity", 0.6);
 
@@ -161,71 +164,70 @@
 				   			return projection([d.lon, d.lat])[1];
 				   		})
 				   		.attr("r", function(d) {
-				   			return size(d['Non-Saudi']);
+				   			return radius(d['Non-Saudi']);
 				   		})
-				   		// .style("stroke-width", "1.5px")
-				   		// .style("stroke", "#ac3973")
+				   		.attr("class", "non-Saudi")
 				   		.style("fill", "#3973ac")
 				   		.style("opacity", 0.6);
 
+				}
 
+				function chooseBars(d) {
+					
+					var TESTPROVINCE = "Riyadh";
 
+					if (d.region == TESTPROVINCE) {
+						return d;
+					}
+					else {
+						null;
+					}
+
+					// console.log(d);
+					// return d;
 				}
 
 
+				function drawBars(new_csv) {
+
+					var barWidth = 10;
+
+					var y = d3.scale.linear()
+						.domain([0, 600000]) //from the policy brief scale
+						.range([0, h/2]);
+
+					var chart = d3.select("svg")
+						.append("g")
+						.attr("class", "chart");
+
+					var bar = chart.selectAll("g")
+						.data(new_csv)
+						.enter()
+						.append("g")
+						.attr("class", "bar")
+						.attr("class", function(d) { return d.region; })
+						.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
+
+					bar.append("rect")
+						.attr("width", "5px")
+						.attr("height", function(d) { 
+							return h/3 - y(d.Saudi);
+						})
+						.attr("y", function(d) { return y(d.Saudi); })
+						// .attr("x", )
+						.attr("class", function(d) { return d.industry; })
+						.attr("fill", "steelblue");
+
+				}
+
 			   d3.csv("_data/capitals.csv", drawCities);
+			   d3.csv("_data/industries.csv", chooseBars, drawBars);
 
-					// d3.csv("TZcitygeo.csv", function(data) {
-
-					// 	svg.selectAll("circle")
-					// 	   .data(data)
-					// 	   .enter()
-					// 	   .append("circle")
-					// 		   .attr("cx", function(d) {
-					// 			   return projection([d.lon, d.lat])[0];
-					// 		   })
-					// 		   .attr("cy", function(d) {
-					// 			   return projection([d.lon, d.lat])[1];
-					// 		   })
-					// 		   .attr("r", function(d) {
-					// 		   		return Math.sqrt(parseInt(d["y"+year]) * 0.0004);			
-					// 		   })
-					// 		   .style("fill", "gold")
-					// 		   .style("opacity", 0.75)
-
-					// 	   .on("mouseover", mouseover)
-					// 	   .on("mouseout", mouseout);
-
-						  
-				// //Transition to 2002! and beyond...
-
-				// d3.select(window).on("keydown", function() {
-				// 	switch (d3.event.keyCode) {
-				// 	case 37: year = yearmax(year); break;
-				// 	case 39: year = yearmin(year); break;
-				// 	}
-				// 	update ();
-				// });
-
-				// function update() {
-
-				// title.text(year);
-
-				// svg.selectAll("circle")
-				// 	.transition(1500)
-				// 	.attr("r", function(d) {
-				// 	return Math.sqrt(parseInt(d["y"+year]) * 0.0004);  
-				// 		});
-				
-				// };
-
-				// 	}); //csv closer
-
-		}
+		} //drawMap
 
 
 
-			//Data
+			//CALL all the functions
 			d3.json("_geo/saudi_comp.json", drawMap);
 
 					

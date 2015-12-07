@@ -15,8 +15,16 @@ To compress this file, [TopoJSON](https://github.com/mbostock/topojson) was used
 topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 ```
 
+## Resources
+* [ColorHexa - Help with picking colors](http://www.colorhexa.com/)
+* [ColorBrewer - Help with picking map colors](http://colorbrewer2.org/)
+* [DIVA-GIS](http://www.diva-gis.org/)
+* [Mike Bostock - Let's Make a Map](http://bost.ocks.org/mike/map/)
+
 ## TODOs
 1. ~~`git`.~~
-2. Get map up.
-3. GPS coords for province capitals.
-4. Input `.csv` for bar chart.
+2. ~~Get map up.~~
+3. ~~GPS coords for province capitals.~~
+4. ~~Workforce population.~~
+5. Total population (Saudi, non-Saudi) data.
+6. Input `.csv` for dynamic bar chart.
