@@ -27,4 +27,5 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 3. ~~GPS coords for province capitals.~~
 4. ~~Workforce population.~~
 5. Total population (Saudi, non-Saudi) data.
-6. Input `.csv` for dynamic bar chart.
+6. ~~Input `.csv` for dynamic bar chart.~~
+7. Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.
