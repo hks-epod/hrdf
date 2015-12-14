@@ -253,9 +253,11 @@
 
 					// console.table(filtered.slice(0,10));
 
+					// DATA JOIN
 					var bar = chart.selectAll("g")
-						.data(filtered)
-						.enter()
+						.data(filtered);
+					
+					bar.enter()
 						.append("g")
 						.attr("class", function(d) { return "bar " + d.region; })
 						.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
@@ -297,15 +299,17 @@
 
 						console.table(filtered.slice(0,10));
 
-						chart.selectAll(".bar")
-							.data(filtered)
-							.enter()
+						// chart.selectAll(".bar")
+						bar.data(filtered);
+
+						bar.enter()
 							.append("g")
 							.attr("class", function(d) { return "bar " + d.region; })
 							.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
 
-						console.log(d3.selectAll(".bar"));
+						// console.log(d3.selectAll(".bar"));
 						bar.exit().remove();
+						console.log(bar);
 
 						saudiRects.transition()
 							.attr("height", function(d) { 
@@ -316,7 +320,7 @@
 
 						// expatRects.attr("heigh")
 
-						}
+					} //update func
 
 					map.selectAll("path")
 						.on("mouseover", hover)
