@@ -86,7 +86,7 @@
 
 		<script type="text/javascript">
 
-		var userProvince;
+		var userProvince = "Riyadh";
 
 		function mouseover(d) {
 
@@ -119,7 +119,10 @@
 
 		function provincePick(d) {
 			userProvince = d.id;
+			console.log(userProvince);
 			d3.select(this).attr("class", "moused");
+
+
 
 		}
 
@@ -162,9 +165,7 @@
 			   .append("path")
 			   .attr("d", path)
 			   .attr("class", "province nomouse")
-			   .attr("id", function(d) { return d.id; })
-			   .on("mouseover", provincePick)
-			   .on("mouseout", demoused);
+			   .attr("id", function(d) { return d.id; });
 
 
 				function drawCities(csv) {
@@ -217,15 +218,17 @@
 
 				function chooseBars(d) {
 
-					if (d.region == "Riyadh") {
+					console.log(userProvince);
+
+					if (d.region == userProvince) {
 						return d;
 					}
 					else {
 						null;
 					}
 
-					// console.log(d);
-					// return d;
+					return d;
+
 				}
 
 
@@ -241,6 +244,12 @@
 						.append("g")
 						.attr("class", "chart");
 
+
+					map.selectAll("path")
+						.on("mouseover", provincePick)
+			   			.on("mouseout", demoused);
+
+
 					var bar = chart.selectAll("g")
 						.data(new_csv)
 						.enter()
@@ -250,22 +259,35 @@
 						.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
 
 					// SAUDI 
-					bar.append("rect")
+					saudiRects = bar.append("rect")
 						.attr("width", "5px")
-						.attr("height", function(d) { 
+						.attr("fill", "steelblue")
+						.attr("opacity", "0.7");
+
+					saudiRects.attr("height", function(d) { 
 							return h/3 - y(d.Saudi);
 						})
 						.attr("y", function(d) { return y(d.Saudi); })
 						.attr("class", function(d) { return "Saudi " + d.industry; })
-						.attr("fill", "steelblue");
+						
 
 					// NON-SAUDI
+					expatRects = bar.append("rect")
+						.attr("width", "5px")
+						.attr("fill", "pink")
+						.attr("opacity", "0.7");
+
+					expatRects.attr("height", function(d) { 
+							return h/3 - y(d['Non-Saudi']);
+						})
+						.attr("y", function(d) { return y(d['Non-Saudi']); })
+						.attr("class", function(d) { return "Non-Saudi " + d.industry; })
 
 				}
 
+				// Clicking on buttons
 				var toggle = false;
 
-				// Clicking on buttons
 				d3.selectAll("#byPopulation, #byWorkforce").on("click", function() {
 					console.log(this);
 
