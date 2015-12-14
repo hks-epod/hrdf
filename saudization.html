@@ -86,6 +86,7 @@
 
 		<script type="text/javascript">
 
+		// Setting the basic province to Riyadh
 		var userProvince = "Riyadh";
 
 		function mouseover(d) {
@@ -121,21 +122,6 @@
 			d3.select(this).attr("class", "moused");
 		}
 
-		function update(d) {
-
-			userProvince = d.id;
-			console.log(userProvince);
-			d3.select(this).attr("class", "moused");
-			// console.log(data);
-
-			filtered = data.filter(function(row) {
-				return row['region'] == userProvince;
-			})
-
-			
-
-			console.table(filtered.slice(0,10));
-		}
 
 		function demoused(d) {
 			d3.select(this).attr("class", "nomouse");
@@ -271,8 +257,7 @@
 						.data(filtered)
 						.enter()
 						.append("g")
-						.attr("class", "bar")
-						.attr("class", function(d) { return d.region; })
+						.attr("class", function(d) { return "bar " + d.region; })
 						.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
 
 					// SAUDI 
@@ -300,6 +285,38 @@
 						.attr("y", function(d) { return y(d['Non-Saudi']); })
 						.attr("class", function(d) { return "Non-Saudi " + d.industry; })
 
+
+			   		function update(d) {
+
+			   			d3.select(this).attr("class", "moused");
+						userProvince = d.id;
+
+						filtered = data.filter(function(row) {
+							return row['region'] == userProvince;
+						});
+
+						console.table(filtered.slice(0,10));
+
+						chart.selectAll(".bar")
+							.data(filtered)
+							.enter()
+							.append("g")
+							.attr("class", function(d) { return "bar " + d.region; })
+							.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
+
+						console.log(d3.selectAll(".bar"));
+						bar.exit().remove();
+
+						saudiRects.transition()
+							.attr("height", function(d) { 
+								return h/3 - y(d.Saudi);
+							})
+							.attr("y", function(d) { return y(d.Saudi); })
+							.attr("class", function(d) { return "Saudi " + d.industry; })
+
+						// expatRects.attr("heigh")
+
+						}
 
 					map.selectAll("path")
 						.on("mouseover", hover)
