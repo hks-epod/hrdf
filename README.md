@@ -22,7 +22,8 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 * [Mike Bostock - Let's Make a Map](http://bost.ocks.org/mike/map/)
 * [Mike Bostock - Pie chart](http://bl.ocks.org/mbostock/3887235)
 * [Mike Bostock - Pie multiples](http://bl.ocks.org/mbostock/1305111)
-* test
+* [Mike Bostock - Pie chart update II](http://bl.ocks.org/mbostock/1346410)
+* [Stack Overflow - "update angles of multiple pie on map in d3.js"](https://stackoverflow.com/questions/23186449/update-angles-of-multiple-pie-on-map-in-d3-js)
 
 ## TODOs
 1. ~~`git`.~~
