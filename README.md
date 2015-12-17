@@ -20,6 +20,8 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 * [ColorBrewer - Help with picking map colors](http://colorbrewer2.org/)
 * [DIVA-GIS](http://www.diva-gis.org/)
 * [Mike Bostock - Let's Make a Map](http://bost.ocks.org/mike/map/)
+* [Mike Bostock - Pie chart](http://bl.ocks.org/mbostock/3887235)
+* [Mike Bostock - Pie multiples](http://bl.ocks.org/mbostock/1305111)
 
 ## TODOs
 1. ~~`git`.~~
@@ -31,4 +33,7 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 7. Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.
 8. Better way to toggle between graphs? 
 9. Update spellings, according to last Slack updates.
-10. Kill overlapping circles; pie charts (vary `r`) instead.
+10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
+11. Fix pie charts:
+  * How do I move each pie chart over each capital? `transform, translate()` - but is it upside-down?
+  * Arc lengths?
