@@ -114,8 +114,6 @@
 		function ready(error,json,csv,new_csv) {
 			drawMap(json);
 			userButtons(csv, new_csv);
-			// drawCircles(csv);
-			// drawBars(new_csv);
 		}
 
 		function mouseover(d) {
@@ -232,48 +230,80 @@
 		function drawCircles(csv) {
 
 			var radius = d3.scale.sqrt()
-				.domain([1, d3.max(csv, function(d) { return d.Total; })])
+				.domain([1, d3.max(csv, function(d) { 
+					// console.log(d);
+					return d.Saudi; 
+				})])
 				.range([2, 25]);
 
+			var color = d3.scale.ordinal();
+
+			var arc = d3.svg.arc()
+				.outerRadius(radius - 10)
+				.innerRadius(0);
+
+			var labelArc = d3.svg.arc()
+				.outerRadius(radius - 40)
+				.innerRadius(radius - 40);
+
+			var pie = d3.layout.pie()
+				.sort(null)
+				.value(function(d) { 
+					return d.Total; 
+				});
+
 			var capitals = d3.select(".map").selectAll("g")
-				.data(csv)
+				.data(pie(csv))
 				.enter()
 				.append("g")
 				.attr("id", function(d) { return d.capital; })
 				.attr("class", "capitals")
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout);
+	   			
+	   		capitals.append("g")
+    			.attr("transform", function(d) {
+    				console.log(d);
+    				return "translate(" + projection([d.data.lon, d.data.lat])[0] + "," + projection([d.data.lon, d.data.lat])[1] + ")";
+    				});
+
+	   		capitals.append("path")
+				.attr("d", arc)
+				.style("fill", function(d) { 
+					return color(d.data.Saudi); 
+				});
+
 
 			// SAUDI
-		   	capitals.append("circle")
-		   		.attr("cx", function(d) {
-		   			return projection([d.lon, d.lat])[0];
-		   		})
-		   		.attr("cy", function(d) {
-		   			return projection([d.lon, d.lat])[1];
-		   		})
-		   		.attr("r", function(d) {
-		   			return radius(d.Saudi);
-		   		})
-		   		.attr("class", "Saudi")
-		   		.style("fill", "#cc6699")
-		   		.style("opacity", 0.6);
+		   	// capitals.append("circle")
+		   	// 	.attr("cx", function(d) {
+		   	// 		return projection([d.lon, d.lat])[0];
+		   	// 	})
+		   	// 	.attr("cy", function(d) {
+		   	// 		return projection([d.lon, d.lat])[1];
+		   	// 	})
+		   	// 	.attr("r", function(d) {
+		   	// 		return radius(d.Saudi);
+		   	// 	})
+		   	// 	.attr("class", "Saudi")
+		   	// 	.style("fill", "#cc6699")
+		   	// 	.style("opacity", 0.6);
 
 
-		   	// NON-SAUDI
-		   	capitals.append("circle")
-		   		.attr("cx", function(d) {
-		   			return projection([d.lon, d.lat])[0];
-		   		})
-		   		.attr("cy", function(d) {
-		   			return projection([d.lon, d.lat])[1];
-		   		})
-		   		.attr("r", function(d) {
-		   			return radius(d['Non-Saudi']);
-		   		})
-		   		.attr("class", "non-Saudi")
-		   		.style("fill", "#3973ac")
-		   		.style("opacity", 0.6);
+		   	// // NON-SAUDI
+		   	// capitals.append("circle")
+		   	// 	.attr("cx", function(d) {
+		   	// 		return projection([d.lon, d.lat])[0];
+		   	// 	})
+		   	// 	.attr("cy", function(d) {
+		   	// 		return projection([d.lon, d.lat])[1];
+		   	// 	})
+		   	// 	.attr("r", function(d) {
+		   	// 		return radius(d['Non-Saudi']);
+		   	// 	})
+		   	// 	.attr("class", "non-Saudi")
+		   	// 	.style("fill", "#3973ac")
+		   	// 	.style("opacity", 0.6);
 
 		} //drawCircles
 
