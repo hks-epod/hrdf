@@ -254,7 +254,7 @@
 			
 			var circles = d3.select("svg")
 							.append("g")
-							.attr("class", "circles")
+							.attr("class", "circles");
 
 			var arcs = circles.selectAll("g")
 				.data(csv)
@@ -265,17 +265,19 @@
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout)
     			.attr("transform", function(d) {
-    				// console.log(d);
     				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
 
-		    arc.outerRadius(function (d,i) {
 
+		    arc.outerRadius(function (d,i) {
 		    		console.log(radius(d.Saudi));
 					// return radius(data_water_pc()[this.parentNode.__data__.id][0]+data_water_pc()[this.parentNode.__data__.id][1]);
 				})
 				.innerRadius(0);
 
+			// THIS WORKS.
+			arcs.append("text")
+				.text("Hi");
 
 	   		arcs.append("path")
 				.attr("d", arc)
