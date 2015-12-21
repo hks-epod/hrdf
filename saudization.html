@@ -79,7 +79,6 @@
 		</div>
 
 		<div id="buttons">
-			<p><span id="byPopulation" class="button">By population</span></p>
 			<p><span id="byWorkforce" class="button">By workforce</span></p>
 			<p><span id="byIndustry" class="button">By industry</span></p>
 			<p><span id="byRegion" class="button">By region</span></p>
@@ -123,19 +122,21 @@
 
 				var mousecoord = [0,0];
 				mousecoord = d3.mouse(this);
+				console.log(d);
+				console.log(this.parentNode.__data__);
 
 				d3.select("#tooltip")
-					.style("left", mousecoord[0] + "px")
-					.style("top", mousecoord[1]-75 + "px");
+					.style("left", mousecoord[0] + w/2 + "px")
+					.style("top", mousecoord[1] + h/2 + "px");
 
 				d3.select("#provinceName")
 					.text(d.capital);
 
 				d3.select("#saudi")
-					.text(comma(d.Saudi));
+					.text(comma(this.parentNode.__data__.Saudi));
 
 				d3.select("#expats")
-					.text(comma(d['Non-Saudi']));
+					.text(comma(this.parentNode.__data__['Non-Saudi']));
 
 				d3.select("#tooltip").classed("hidden", false);
 		};
@@ -166,15 +167,16 @@
 		function userButtons(csv, new_csv) {
 			var toggle = false;
 
-			d3.selectAll("#byPopulation, #byWorkforce").on("click", function() {
+			d3.selectAll("#byWorkforce").on("click", function() {
 				toggle = !toggle;
 				d3.selectAll(".chart").remove();
 
 				if (toggle == true) {
+					d3.select(".chart").remove();
 					drawPies(csv);		
 				}
 				else if (toggle == false) {
-					d3.selectAll(".circleLayer").remove();
+					d3.select(".circleLayer").remove();
 				}
 
 			});
@@ -186,10 +188,11 @@
 		   		toggle = !toggle;
 
 		   		if (toggle == true) {
+		   			d3.select(".circleLayer").remove();
 		   			drawBars(new_csv);		
 		   		}
 		   		else if (toggle == false) {
-		   			d3.selectAll(".chart").remove();
+		   			d3.select(".chart").remove();
 		   		}
 
 		   });
@@ -231,8 +234,9 @@
 				.domain([1, d3.max(csv, function(d) { return d.Total; })])
 				.range([5, 30]);
 
-			var color = d3.scale.category10();
+			var color = ["#fae7b5", "#b5c8fa"];
 			var arc = d3.svg.arc();
+			console.log(d3.rgb(color[0]).darker);
 			
 			arc.innerRadius(0)
 				.outerRadius(function(d) { return radius(this.parentNode.__data__.Total); });
@@ -250,23 +254,26 @@
 				.append("g")
 				.attr("id", function(d) { return d.capital; })
 				.attr("class", "pie")
-				.on("mouseover", mouseover)
-	   			.on("mouseout", mouseout)
     			.attr("transform", function(d) {
     				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
 
 			pies.selectAll(".slice")
 				.data(function(d) {
-					return pie([d['Saudi'], d['Non-Saudi']]); //<-- this is each slice
+					return pie([d['Saudi'], d['Non-Saudi']]);
 				})
 				.enter()
 				.append('path')
 				.attr('class', 'slice')
 				.attr('d',  arc)
-				.style("fill", function(d, i) { return color(i); });
-
-			// debugger;
+				.style("fill", function(d, i) { 
+					// console.log(this.parentNode.__data__);
+					return color[i];
+				})
+				.style("stroke-width", "1px")
+				.style("stroke", function(d, i) { return d3.rgb(color[i]).darker(); })
+				.on("mouseover", mouseover)
+	   			.on("mouseout", mouseout);
 
 		} //drawCircles
 

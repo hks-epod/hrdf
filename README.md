@@ -36,8 +36,11 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 8. Better way to toggle between graphs? 
 9. Update spellings, according to last Slack updates.
 10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
-11. Fix pie charts:
+11. ~~Fix pie charts:~~
   * ~~How do I move each pie chart over each capital? `transform, translate()` - but is it upside-down?~~
-  * Arc lengths?
-  * Reorganize data?
+  * ~~Arc lengths?~~
+  * ~~Reorganize data?~~
+12. Turn off province highlighting when not in `#byRegion`. 
+13. Pie chart: colors? 
+14. Pie chart: Tooltips over each slice?
 
