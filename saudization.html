@@ -229,26 +229,23 @@
 
 			var radius = d3.scale.sqrt()
 				.domain([1, d3.max(csv, function(d) { return d.Total; })])
-				.range([2, 25]);
+				.range([5, 30]);
 
-			var color = d3.scale.ordinal();
-
+			var color = d3.scale.category10();
 			var arc = d3.svg.arc();
+			
+			arc.innerRadius(0)
+				.outerRadius(function(d) { return radius(this.parentNode.__data__.Total); });
 
-			// THE PROBLEM.
 			var pie = d3.layout.pie()
 				.value(function(d) { return d; });
-				// .value(function(d) { return d['Non-Saudi']; });
 		
-			
 			var circleLayer = d3.select("svg")
-							.datum(pie(csv))
 							.append("g")
 							.attr("class", "circleLayer");
 
 			var pies = circleLayer.selectAll(".pie")
 				.data(csv)
-				// .data(function(d) { console.log(d); return d; })
 				.enter()
 				.append("g")
 				.attr("id", function(d) { return d.capital; })
@@ -259,29 +256,15 @@
     				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
 
-		  //   arc.outerRadius(function (d) { return console.log(d); radius(d.value); })
-				// .innerRadius(0);
-
-			arc.outerRadius(20)
-				.innerRadius(0);
-
-			pies.append("text")
-				.text("Hi");
-
 			pies.selectAll(".slice")
 				.data(function(d) {
-					// console.log(pie(d['Saudi']));
 					return pie([d['Saudi'], d['Non-Saudi']]); //<-- this is each slice
 				})
 				.enter()
 				.append('path')
 				.attr('class', 'slice')
 				.attr('d',  arc)
-				.style("fill", function(d) { console.log(d); return "pink"; });
-
-	   // 		pies.append("path")
-				// .attr("d", arc)
-				// .style("fill", function(d) { return color(d.Saudi); });
+				.style("fill", function(d, i) { return color(i); });
 
 			// debugger;
 
