@@ -106,7 +106,7 @@
 		//THE DATA QUEUE
 		queue()
 			.defer(d3.json, "_geo/saudi_comp.json")
-			.defer(d3.csv, "_data/capitals.csv")
+			.defer(d3.csv, "_data/capitals.csv", processCapitals)
 			.defer(d3.csv, "_data/industries.csv")
 			.await(ready);
 		
@@ -154,27 +154,27 @@
 			d3.select(this).attr("class", "nomouse");
 		}
 
+		function processCapitals(d) {
+			d.Total = +d.Total;
+			d.Saudi = +d.Saudi;
+			d['Non-Saudi'] = +d['Non-Saudi'];
+
+			return d;
+
+		}
+
 		function userButtons(csv, new_csv) {
 			var toggle = false;
 
 			d3.selectAll("#byPopulation, #byWorkforce").on("click", function() {
-				console.log(this);
-
 				toggle = !toggle;
-				console.log(toggle);
-
 				d3.selectAll(".chart").remove();
 
 				if (toggle == true) {
-					console.log("Adding circles");
-					// console.log(toggle);
-
-					drawCircles(csv);		
+					drawPies(csv);		
 				}
 				else if (toggle == false) {
-					console.log("Removing circles");
-					// console.log(toggle);
-					d3.selectAll(".capitals").remove();
+					d3.selectAll(".circleLayer").remove();
 				}
 
 			});
@@ -184,10 +184,8 @@
 
 		   		d3.selectAll("circle").remove(); 
 		   		toggle = !toggle;
-		   		console.log(toggle);
 
 		   		if (toggle == true) {
-		   			// d3.csv("_data/industries.csv", drawBars);
 		   			drawBars(new_csv);		
 		   		}
 		   		else if (toggle == false) {
@@ -227,37 +225,31 @@
 		} //drawMap
 
 
-		function drawCircles(csv) {
+		function drawPies(csv) {
 
 			var radius = d3.scale.sqrt()
-				.domain([1, d3.max(csv, function(d) { 
-					// console.log(d);
-					return d.Saudi; 
-				})])
+				.domain([1, d3.max(csv, function(d) { return d.Total; })])
 				.range([2, 25]);
 
 			var color = d3.scale.ordinal();
 
 			var arc = d3.svg.arc();
-				// .outerRadius(radius - 10)
-				// .innerRadius(0);
 
-			var labelArc = d3.svg.arc()
-				.outerRadius(radius - 40)
-				.innerRadius(radius - 40);
-
-			var pie = d3.layout.pie();
-				// .sort(null)
-				// .value(function(d) { 
-				// 	return d.Total; 
-				// });
+			var pie = d3.layout.pie()
+				.sort(null)
+				.value(function(d) {
+					console.log(d); 
+					return d;
+				});
+				// .value(function(d) { return d['Non-Saudi']; });
+		
 			
-			var circles = d3.select("svg")
+			var circleLayer = d3.select("svg")
 							.append("g")
-							.attr("class", "circles");
+							.attr("class", "circleLayer");
 
-			var arcs = circles.selectAll("g")
-				.data(csv)
+			var pies = circleLayer.selectAll("g")
+				.data(pie(csv))
 				.enter()
 				.append("g")
 				.attr("id", function(d) { return d.capital; })
@@ -268,65 +260,21 @@
     				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
 
-
-		    arc.outerRadius(function (d,i) {
-		    		console.log(radius(d.Saudi));
-					// return radius(data_water_pc()[this.parentNode.__data__.id][0]+data_water_pc()[this.parentNode.__data__.id][1]);
-				})
+		    arc.outerRadius(function (d) { 
+		    	return radius(d.Total); 
+		    })
 				.innerRadius(0);
 
-			// THIS WORKS.
-			arcs.append("text")
+
+			pies.append("text")
 				.text("Hi");
 
-	   		arcs.append("path")
+	   		pies.append("path")
+	   			// .data(pie)
 				.attr("d", arc)
-				.style("fill", function(d) { 
-					console.log(d);
-					return color(d.Saudi); 
-				});
+				.style("fill", function(d) { return color(d.Saudi); });
 
-
-
-		    // var arcs = piegroup.selectAll("path")
-		    //     .data(function(d) {return pie(data_water_pc()[d.id]); })
-		    //     .enter().append("svg:path")
-		    //     .attr("d", arc)
-		    //     .each(function(d) { this._current = d; }) // store the initial angles
-		    //     .attr("class","slice")
-		    //     .style("fill", function(d, i) { return colorWater(i); });
-
-
-			// SAUDI
-		   	// capitals.append("circle")
-		   	// 	.attr("cx", function(d) {
-		   	// 		return projection([d.lon, d.lat])[0];
-		   	// 	})
-		   	// 	.attr("cy", function(d) {
-		   	// 		return projection([d.lon, d.lat])[1];
-		   	// 	})
-		   	// 	.attr("r", function(d) {
-		   	// 		return radius(d.Saudi);
-		   	// 	})
-		   	// 	.attr("class", "Saudi")
-		   	// 	.style("fill", "#cc6699")
-		   	// 	.style("opacity", 0.6);
-
-
-		   	// // NON-SAUDI
-		   	// capitals.append("circle")
-		   	// 	.attr("cx", function(d) {
-		   	// 		return projection([d.lon, d.lat])[0];
-		   	// 	})
-		   	// 	.attr("cy", function(d) {
-		   	// 		return projection([d.lon, d.lat])[1];
-		   	// 	})
-		   	// 	.attr("r", function(d) {
-		   	// 		return radius(d['Non-Saudi']);
-		   	// 	})
-		   	// 	.attr("class", "non-Saudi")
-		   	// 	.style("fill", "#3973ac")
-		   	// 	.style("opacity", 0.6);
+			// debugger;
 
 		} //drawCircles
 

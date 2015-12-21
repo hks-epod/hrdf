@@ -37,5 +37,7 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 9. Update spellings, according to last Slack updates.
 10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
 11. Fix pie charts:
-  * How do I move each pie chart over each capital? `transform, translate()` - but is it upside-down?
+  * ~~How do I move each pie chart over each capital? `transform, translate()` - but is it upside-down?~~
   * Arc lengths?
+  * Reorganize data?
+
