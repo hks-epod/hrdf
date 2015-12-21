@@ -43,4 +43,4 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 12. Turn off province highlighting when not in `#byRegion`. 
 13. Pie chart: colors? 
 14. Pie chart: Tooltips over each slice?
-
+15. Industry viz: start that function. 

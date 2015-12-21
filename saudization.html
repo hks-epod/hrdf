@@ -8,65 +8,68 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
 		<style type="text/css">
 
-			circle:hover {
-				fill: orange;
-			}
+		div {
+			font: 200 20px Helvetica, sans-serif;
+		}
 
-			#tooltip {
-				position: absolute;
-				width: 250px;
-				height: auto;
-				padding: 10px;
-				background-color: white;
-				-webkit-border-radius: 10px;
-				-moz-border-radius: 10px;
-				border-radius: 10px;
-				-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-				-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-				pointer-events: none;
-			}
-			
-			#tooltip.hidden {
-				display: none;
-			}
-			
-			#tooltip p {
-				margin: 0;
-				font-family: sans-serif;
-				font-size: 16px;
-				line-height: 20px;
-			}
+		circle:hover {
+			fill: orange;
+		}
 
-			.title {
-			  font: 300 78px Helvetica;
-			  fill: #666;
-			}
+		#tooltip {
+			position: absolute;
+			width: 250px;
+			height: auto;
+			padding: 10px;
+			background-color: white;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+			pointer-events: none;
+		}
+		
+		#tooltip.hidden {
+			display: none;
+		}
+		
+		#tooltip p {
+			margin: 0;
+			font-family: sans-serif;
+			font-size: 16px;
+			line-height: 20px;
+		}
 
-			.nomouse {
-				stroke-width: 0.75px;
-				stroke: white;
-				stroke-dasharray: 3,3;
-				fill: #66cc99;
-			}
+		.title {
+		  font: 300 78px Helvetica;
+		  fill: #666;
+		}
 
-			.moused {
-				stroke-width: 2px;
-				stroke: yellow;
-				fill: #39ac73;
-				/*stroke-dasharray: 3,3;*/
-			}
+		.nomouse {
+			stroke-width: 0.75px;
+			stroke: white;
+			stroke-dasharray: 3,3;
+			fill: #66cc99;
+		}
 
-			.button:hover {
-				cursor: pointer;
-			}
+		.moused {
+			stroke-width: 2px;
+			stroke: yellow;
+			fill: #39ac73;
+		}
 
-			#buttons {
-				position: absolute;
-				width: 200px;
-				top: 200px;
-				left: 50px;
-			}
+		.button:hover {
+			cursor: pointer;
+		}
+
+		#buttons {
+			position: absolute;
+			width: 200px;
+			top: 200px;
+			left: 50px;
+		}
 
 		</style>
 	</head>
@@ -115,15 +118,13 @@
 			userButtons(csv, new_csv);
 		}
 
+
 		function mouseover(d) {
 
-				// d3.select(this).style("fill", "orange");
 				var comma = d3.format(",");
 
 				var mousecoord = [0,0];
 				mousecoord = d3.mouse(this);
-				console.log(d);
-				console.log(this.parentNode.__data__);
 
 				d3.select("#tooltip")
 					.style("left", mousecoord[0] + w/2 + "px")
