@@ -237,41 +237,51 @@
 
 			// THE PROBLEM.
 			var pie = d3.layout.pie()
-				.sort(null)
-				.value(function(d) {
-					console.log(d); 
-					return d;
-				});
+				.value(function(d) { return d; });
 				// .value(function(d) { return d['Non-Saudi']; });
 		
 			
 			var circleLayer = d3.select("svg")
+							.datum(pie(csv))
 							.append("g")
 							.attr("class", "circleLayer");
 
-			var pies = circleLayer.selectAll("g")
-				.data(pie(csv))
+			var pies = circleLayer.selectAll(".pie")
+				.data(csv)
+				// .data(function(d) { console.log(d); return d; })
 				.enter()
 				.append("g")
-				.attr("id", function(d) { console.log(d); return d.data.capital; })
-				.attr("class", "capitals")
+				.attr("id", function(d) { return d.capital; })
+				.attr("class", "pie")
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout)
     			.attr("transform", function(d) {
-    				return "translate(" + projection([d.data.lon, d.data.lat])[0] + "," + projection([d.data.lon, d.data.lat])[1] + ")";
+    				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
 
-		    arc.outerRadius(function (d) { return radius(d.data.Total); })
-				.innerRadius(0);
+		  //   arc.outerRadius(function (d) { return console.log(d); radius(d.value); })
+				// .innerRadius(0);
 
+			arc.outerRadius(20)
+				.innerRadius(0);
 
 			pies.append("text")
 				.text("Hi");
 
-	   		pies.append("path")
-	   			// .data(pie)
-				.attr("d", arc)
-				.style("fill", function(d) { return color(d.Saudi); });
+			pies.selectAll(".slice")
+				.data(function(d) {
+					// console.log(pie(d['Saudi']));
+					return pie([d['Saudi'], d['Non-Saudi']]); //<-- this is each slice
+				})
+				.enter()
+				.append('path')
+				.attr('class', 'slice')
+				.attr('d',  arc)
+				.style("fill", function(d) { console.log(d); return "pink"; });
+
+	   // 		pies.append("path")
+				// .attr("d", arc)
+				// .style("fill", function(d) { return color(d.Saudi); });
 
 			// debugger;
 
