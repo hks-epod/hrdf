@@ -235,6 +235,7 @@
 
 			var arc = d3.svg.arc();
 
+			// THE PROBLEM.
 			var pie = d3.layout.pie()
 				.sort(null)
 				.value(function(d) {
@@ -252,17 +253,15 @@
 				.data(pie(csv))
 				.enter()
 				.append("g")
-				.attr("id", function(d) { return d.capital; })
+				.attr("id", function(d) { console.log(d); return d.data.capital; })
 				.attr("class", "capitals")
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout)
     			.attr("transform", function(d) {
-    				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
+    				return "translate(" + projection([d.data.lon, d.data.lat])[0] + "," + projection([d.data.lon, d.data.lat])[1] + ")";
     				});
 
-		    arc.outerRadius(function (d) { 
-		    	return radius(d.Total); 
-		    })
+		    arc.outerRadius(function (d) { return radius(d.data.Total); })
 				.innerRadius(0);
 
 
