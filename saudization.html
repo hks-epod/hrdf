@@ -12,10 +12,6 @@
 			font: 200 20px Helvetica, sans-serif;
 		}
 
-		circle:hover {
-			fill: orange;
-		}
-
 		#tooltip {
 			position: absolute;
 			width: 250px;
@@ -120,31 +116,33 @@
 
 
 		function mouseover(d) {
+			var comma = d3.format(",");
+			var mousecoord = [0,0];
+			mousecoord = d3.mouse(this);
 
-				var comma = d3.format(",");
+			d3.select("#tooltip")
+				.style("left", mousecoord[0] + w/2 + "px")
+				.style("top", mousecoord[1] + h/2 + "px");
 
-				var mousecoord = [0,0];
-				mousecoord = d3.mouse(this);
+			d3.select(this).style("stroke-width", "2px");
+			d3.select("#provinceName").text(this.parentNode.__data__.capital + " province");
+			d3.select("#saudi").text(comma(this.parentNode.__data__.Saudi));
+			d3.select("#expats").text(comma(this.parentNode.__data__['Non-Saudi']));
 
-				d3.select("#tooltip")
-					.style("left", mousecoord[0] + w/2 + "px")
-					.style("top", mousecoord[1] + h/2 + "px");
+			if (d.data == this.parentNode.__data__.Saudi) {
+				d3.select("#saudi").style("background-color", "yellow");
+				d3.select("#expats").style("background-color", null);
+			} else if (d.data == this.parentNode.__data__['Non-Saudi']) {
+				d3.select("#saudi").style("background-color", null);
+				d3.select("#expats").style("background-color", "yellow");
+			}
 
-				d3.select("#provinceName")
-					.text(d.capital);
-
-				d3.select("#saudi")
-					.text(comma(this.parentNode.__data__.Saudi));
-
-				d3.select("#expats")
-					.text(comma(this.parentNode.__data__['Non-Saudi']));
-
-				d3.select("#tooltip").classed("hidden", false);
+			d3.select("#tooltip").classed("hidden", false);
 		};
 
 		function mouseout(d) {
-				// d3.select(this).style("fill", "#66cc99");
-				d3.select("#tooltip").classed("hidden", true);
+			d3.select("#tooltip").classed("hidden", true);
+			d3.select(this).style("stroke-width", "1px");
 		};
 
 		function hover(d) {
@@ -239,7 +237,7 @@
 			var arc = d3.svg.arc();
 			console.log(d3.rgb(color[0]).darker);
 			
-			arc.innerRadius(0)
+			arc.innerRadius(function(d) { return radius(this.parentNode.__data__.Total / 50); })
 				.outerRadius(function(d) { return radius(this.parentNode.__data__.Total); });
 
 			var pie = d3.layout.pie()
