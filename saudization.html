@@ -86,8 +86,9 @@
 		<script type="text/javascript">
 
 		// Putting these in the global scope - otherwise, how do I return and pass?
-		var w = 1200;
-		var h = 500;
+		var w = 1200,
+			h = 500,
+			color = ["#fae7b5", "#b5c8fa"];
 
 		// Rotating the Earth here...
 		// Saudi longlat: 45° E, 24° N
@@ -117,14 +118,18 @@
 
 		function mouseover(d) {
 			var comma = d3.format(",");
-			var mousecoord = [0,0];
-			mousecoord = d3.mouse(this);
+			var mousecoord = [0,0],
+				mousecoord = d3.mouse(this),
+				thisColor = d3.select(this)[0][0].style.fill
 
 			d3.select("#tooltip")
 				.style("left", mousecoord[0] + w/2 + "px")
 				.style("top", mousecoord[1] + h/2 + "px");
 
-			d3.select(this).style("stroke-width", "2px");
+			d3.select(this)
+				.style("stroke-width", "2px")
+				.style("fill", d3.rgb(thisColor).darker()); //TODO: not sure if I'll keep this?
+			
 			d3.select("#provinceName").text(this.parentNode.__data__.capital + " province");
 			d3.select("#saudi").text(comma(this.parentNode.__data__.Saudi));
 			d3.select("#expats").text(comma(this.parentNode.__data__['Non-Saudi']));
@@ -233,11 +238,9 @@
 				.domain([1, d3.max(csv, function(d) { return d.Total; })])
 				.range([5, 30]);
 
-			var color = ["#fae7b5", "#b5c8fa"];
 			var arc = d3.svg.arc();
-			console.log(d3.rgb(color[0]).darker);
 			
-			arc.innerRadius(function(d) { return radius(this.parentNode.__data__.Total / 50); })
+			arc.innerRadius(0)
 				.outerRadius(function(d) { return radius(this.parentNode.__data__.Total); });
 
 			var pie = d3.layout.pie()
@@ -265,33 +268,13 @@
 				.append('path')
 				.attr('class', 'slice')
 				.attr('d',  arc)
-				.style("fill", function(d, i) { 
-					// console.log(this.parentNode.__data__);
-					return color[i];
-				})
+				.style("fill", function(d, i) { return color[i]; })
 				.style("stroke-width", "1px")
 				.style("stroke", function(d, i) { return d3.rgb(color[i]).darker(); })
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout);
 
 		} //drawCircles
-
-
-				// function chooseBars(d) {
-
-
-				// 	// console.log(userProvince);
-
-				// 	// if (d.region == userProvince) {
-				// 	// 	return d;
-				// 	// }
-				// 	// else {
-				// 	// 	null;
-				// 	// }
-
-				// 	return d;
-
-				// }
 
 
 		function drawBars(new_csv) {

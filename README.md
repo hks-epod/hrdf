@@ -24,6 +24,7 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 * [Mike Bostock - Pie multiples](http://bl.ocks.org/mbostock/1305111)
 * [Mike Bostock - Pie chart update II](http://bl.ocks.org/mbostock/1346410)
 * [Stack Overflow - "update angles of multiple pie on map in d3.js"](https://stackoverflow.com/questions/23186449/update-angles-of-multiple-pie-on-map-in-d3-js)
+* [mapsam.com - D3 Background Hash Patterns](http://mapsam.com/posts/d3-background-hash/)
 
 ## TODOs
 1. ~~`git`.~~
@@ -41,6 +42,6 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
   * ~~Arc lengths?~~
   * ~~Reorganize data?~~
 12. Turn off province highlighting when not in `#byRegion`. 
-13. Pie chart: colors? 
+13. ~~Pie chart: colors?~~
 14. Pie chart: Tooltips over each slice?
 15. Industry viz: start that function. 
