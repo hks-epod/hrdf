@@ -56,6 +56,18 @@
 			fill: #39ac73;
 		}
 
+		.saudi {
+			fill: #ffffad;
+			stroke-width: "1px";
+			stroke: #ffd6ad;
+		}
+
+		.expat {
+			fill: #ffb061;
+			stroke-width: "1px";
+			stroke: #ff6161;
+		}
+
 		.button:hover {
 			cursor: pointer;
 		}
@@ -87,8 +99,7 @@
 
 		// Putting these in the global scope - otherwise, how do I return and pass?
 		var w = 1200,
-			h = 500,
-			color = ["#fae7b5", "#b5c8fa"];
+			h = 500;
 
 		// Rotating the Earth here...
 		// Saudi longlat: 45° E, 24° N
@@ -120,7 +131,8 @@
 			var comma = d3.format(",");
 			var mousecoord = [0,0],
 				mousecoord = d3.mouse(this),
-				thisColor = d3.select(this)[0][0].style.fill
+				style = window.getComputedStyle(this, null),
+				thisColor = style['fill'];
 
 			d3.select("#tooltip")
 				.style("left", mousecoord[0] + w/2 + "px")
@@ -128,7 +140,7 @@
 
 			d3.select(this)
 				.style("stroke-width", "2px")
-				.style("fill", d3.rgb(thisColor).darker()); //TODO: not sure if I'll keep this?
+				.style("fill", d3.rgb(thisColor).darker());
 			
 			d3.select("#provinceName").text(this.parentNode.__data__.capital + " province");
 			d3.select("#saudi").text(comma(this.parentNode.__data__.Saudi));
@@ -147,17 +159,27 @@
 
 		function mouseout(d) {
 			d3.select("#tooltip").classed("hidden", true);
-			d3.select(this).style("stroke-width", "1px");
+			
+			// Feels really hacky :/
+			style = window.getComputedStyle(this, null),
+			thisColor = style['fill'];
+			
+			d3.select(this)
+				.style("stroke-width", "1px")
+				.style("fill", d3.rgb(thisColor).brighter());
 		};
+
 
 		function hover(d) {
 			d3.select(this).attr("class", "moused");
 		}
 
 
+
 		function demoused(d) {
 			d3.select(this).attr("class", "nomouse");
 		}
+
 
 		function processCapitals(d) {
 			d.Total = +d.Total;
@@ -167,6 +189,7 @@
 			return d;
 
 		}
+
 
 		function userButtons(csv, new_csv) {
 			var toggle = false;
@@ -203,6 +226,7 @@
 
 		}
  
+
 		function drawMap(json) {
 
 			var path = d3.geo.path()
@@ -266,11 +290,13 @@
 				})
 				.enter()
 				.append('path')
-				.attr('class', 'slice')
 				.attr('d',  arc)
-				.style("fill", function(d, i) { return color[i]; })
-				.style("stroke-width", "1px")
-				.style("stroke", function(d, i) { return d3.rgb(color[i]).darker(); })
+				.attr('class', 'slice')
+				.attr('class', function(d, i) { 
+					// Terrible hack
+					if (i==0) { return "saudi"; }
+					if (i==1) { return "expat"; }
+				})
 				.on("mouseover", mouseover)
 	   			.on("mouseout", mouseout);
 
@@ -309,27 +335,25 @@
 			// SAUDI 
 			saudiRects = bar.append("rect")
 				.attr("width", "5px")
-				.attr("fill", "steelblue")
 				.attr("opacity", "0.7");
 
 			saudiRects.attr("height", function(d) { 
 					return h/3 - y(d.Saudi);
 				})
 				.attr("y", function(d) { return y(d.Saudi); })
-				.attr("class", function(d) { return "Saudi " + d.industry; })
+				.attr("class", function(d) { return "saudi " + d.industry; })
 				
 
 			// NON-SAUDI
 			expatRects = bar.append("rect")
 				.attr("width", "5px")
-				.attr("fill", "pink")
 				.attr("opacity", "0.7");
 
 			expatRects.attr("height", function(d) { 
 					return h/3 - y(d['Non-Saudi']);
 				})
 				.attr("y", function(d) { return y(d['Non-Saudi']); })
-				.attr("class", function(d) { return "Non-Saudi " + d.industry; })
+				.attr("class", function(d) { return "expat " + d.industry; })
 
 
 	   		function update(d) {
