@@ -49,3 +49,4 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 17. Bar chart: axes, legend.
 18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. 
 19. Fix `xAxis`. 
+20. ~~Bold/highlight the "by..." user selection.~~

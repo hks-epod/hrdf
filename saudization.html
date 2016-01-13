@@ -204,10 +204,12 @@
 
 				if (toggle == true) {
 					d3.select(".chart").remove();
+					d3.select("#byWorkforce").style("background-color", "yellow");
 					drawPies(csv);		
 				}
 				else if (toggle == false) {
 					d3.select(".circleLayer").remove();
+					d3.selectAll(".button").style("background-color", null);
 				}
 
 			});
@@ -220,10 +222,12 @@
 
 		   		if (toggle == true) {
 		   			d3.select(".circleLayer").remove();
+		   			d3.select("#byRegion").style("background-color", "yellow");
 		   			drawBars(new_csv);		
 		   		}
 		   		else if (toggle == false) {
 		   			d3.select(".chart").remove();
+		   			d3.selectAll(".button").style("background-color", null);
 		   		}
 
 		   });
