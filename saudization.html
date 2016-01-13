@@ -48,9 +48,16 @@
 			font: 300 16px/20px 'Nunito', sans-serif;
 		}
 
-		.title {
+		.title, .hoverTitle {
 		  font: 200 42px 'Franklin Gothic Medium', sans-serif;
-		  fill: #d2d2d2;
+		}
+
+		.title {
+			fill: #d2d2d2;
+		}
+
+		.hoverTitle {
+			fill: #ececec;
 		}
 
 		.nomouse {
@@ -174,10 +181,11 @@
 
 		function mouseout(d) {
 			d3.select("#tooltip").classed("hidden", true);
-			
+
 			// Feels really hacky :/
 			style = window.getComputedStyle(this, null),
 			thisColor = style['fill'];
+
 			
 			d3.select(this)
 				.style("stroke-width", "1px")
@@ -187,12 +195,24 @@
 
 		function hover(d) {
 			d3.select(this).attr("class", "moused");
+			hoverProvince = d.id;
+			
+			d3.select("#chartTitle")
+				.text(hoverProvince)
+				.classed("title", false)
+				.classed("hoverTitle", true)
+				.attr("fill", "#ececec");
 		}
-
 
 
 		function demoused(d) {
 			d3.select(this).attr("class", "nomouse");
+
+			// TODO: Make this a function of userProvince.
+			d3.select("#chartTitle")
+				.text("Riyadh")
+				.classed("hoverTitle", false)
+				.classed("title", true); 
 		}
 
 
@@ -212,6 +232,12 @@
 			d3.selectAll("#byWorkforce").on("click", function() {
 				toggle = !toggle;
 				d3.selectAll(".chart").remove();
+
+				d3.select(".map").selectAll("path")
+		   				.on("mouseover", null)
+		   				.on("mouseout", null)
+		   				.classed("nomouse", true)
+		   				.classed("moused", false);
 
 				if (toggle == true) {
 					d3.select(".chart").remove();
@@ -238,6 +264,12 @@
 		   		}
 		   		else if (toggle == false) {
 		   			d3.select(".chart").remove();
+		   			d3.select(".map").selectAll("path")
+		   				.on("mouseover", null)
+		   				.on("mouseout", null)
+		   				.classed("nomouse", true)
+		   				.classed("moused", false);
+
 		   			d3.selectAll(".button").classed("selected", false);
 		   		}
 
@@ -386,12 +418,12 @@
 			chart.append("text")
 				.attr("x", (w/2 + 400) + "px")
 				.attr("y", "-10px")
-				// .style("position", "absolute")
+				.attr("id", "chartTitle")
 				.classed("title", true)
 				.text(function(d) { 
-					console.log(d);
-					return "Riyadh"
+					return "Riyadh";
 					});
+
 
 			// AXES
 
@@ -439,10 +471,15 @@
 
 			} //update func
 
+			// HIGHLIGHT THE SELECTED USER PROVINCE
 			d3.select(".map").selectAll("path")
 				.on("mouseover", hover)
 	   			.on("mouseout", demoused)
 	   			.on("click", update);
+
+	   		d3.select("path#Riyadh")
+	   			.attr("class", "moused")
+	   			.on("mouseout", null);
 
 		} //drawBars
 

@@ -34,22 +34,22 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 5. ~~Total population (Saudi, non-Saudi) data.~~ 
 6. ~~Input `.csv` for dynamic bar chart.~~
 7. Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.
-  * Default: Keep region highlighted and bar chart label.
-  * Hover: Change bar chart and labels?
+  * ~~Default: Keep region highlighted and bar chart label.~~
+  * Hover: Change bar chart and ~~labels~~?
   * Click: Keep region highlighted and bar chart label. 
-8. Better way to toggle between graphs? 
+8. Better way to toggle between graphs?
 9. Update spellings, according to last Slack updates.
 10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
 11. ~~Fix pie charts:~~
   * ~~How do I move each pie chart over each capital? `transform, translate()` - but is it upside-down?~~
   * ~~Arc lengths?~~
   * ~~Reorganize data?~~
-12. Turn off province highlighting when not in `#byRegion`. 
+12. ~~Turn off province highlighting when not in `#byRegion`.~~
 13. ~~Pie chart: colors?~~
 14. ~~Pie chart: Tooltips over each slice?~~
 15. Industry viz: start that function. 
 16. Explanatory captions.
 17. Bar chart: axes, legend.
-18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. 
+18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button?)
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
