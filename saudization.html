@@ -6,11 +6,23 @@
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src="http://d3js.org/topojson.v1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Nunito:300,400' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 
 		div {
-			font: 200 20px Helvetica, sans-serif;
+			font: 200 20px/24px 'Franklin Gothic Medium', sans-serif;
 		}
+
+		.button {
+			background-color: white;
+			color: #ababab;
+		}
+
+		.selected {
+			background-color: #ababab;
+			color: white;
+		} 
 
 		#tooltip {
 			position: absolute;
@@ -33,14 +45,12 @@
 		
 		#tooltip p {
 			margin: 0;
-			font-family: sans-serif;
-			font-size: 16px;
-			line-height: 20px;
+			font: 300 16px/20px 'Nunito', sans-serif;
 		}
 
 		.title {
-		  font: 300 78px Helvetica;
-		  fill: #666;
+		  font: 200 42px 'Franklin Gothic Medium', sans-serif;
+		  fill: #d2d2d2;
 		}
 
 		.nomouse {
@@ -161,6 +171,7 @@
 			d3.select("#tooltip").classed("hidden", false);
 		};
 
+
 		function mouseout(d) {
 			d3.select("#tooltip").classed("hidden", true);
 			
@@ -186,7 +197,7 @@
 
 
 		function processCapitals(d) {
-			d.Total = +d.Total;
+			d.Total = +d.Total; //TODO: Replace w Eric's destring func.
 			d.Saudi = +d.Saudi;
 			d['Non-Saudi'] = +d['Non-Saudi'];
 
@@ -204,12 +215,12 @@
 
 				if (toggle == true) {
 					d3.select(".chart").remove();
-					d3.select("#byWorkforce").style("background-color", "yellow");
+					d3.select("#byWorkforce").classed("button selected", true);
 					drawPies(csv);		
 				}
 				else if (toggle == false) {
 					d3.select(".circleLayer").remove();
-					d3.selectAll(".button").style("background-color", null);
+					d3.selectAll(".button").classed("selected", false);
 				}
 
 			});
@@ -222,12 +233,12 @@
 
 		   		if (toggle == true) {
 		   			d3.select(".circleLayer").remove();
-		   			d3.select("#byRegion").style("background-color", "yellow");
+		   			d3.select("#byRegion").classed("button selected", true);
 		   			drawBars(new_csv);		
 		   		}
 		   		else if (toggle == false) {
 		   			d3.select(".chart").remove();
-		   			d3.selectAll(".button").style("background-color", null);
+		   			d3.selectAll(".button").classed("selected", false);
 		   		}
 
 		   });
@@ -336,14 +347,15 @@
 				.attr("class", "chart")
 					.attr("transform", "translate(-120, 150)");
 
+			
+			// DATA JOIN
 			filtered = data.filter(function(row) {
 				return row['region'] == "Riyadh";
 			})
 
-			// DATA JOIN
 			var bar = chart.selectAll("g")
 				.data(filtered);
-			
+
 			bar.enter()
 				.append("g")
 				.attr("class", function(d) { return "bar " + d.region; })
@@ -370,12 +382,27 @@
 				.attr("y", function(d) { return y(d['Non-Saudi']); })
 				.attr("class", function(d) { return "bars expat " + d.industry; })
 
+			// BAR CHART TITLE
+			chart.append("text")
+				.attr("x", (w/2 + 400) + "px")
+				.attr("y", "-10px")
+				// .style("position", "absolute")
+				.classed("title", true)
+				.text(function(d) { 
+					console.log(d);
+					return "Riyadh"
+					});
 
 			// AXES
-			xAxis.domain(array.map(function(d) { return d.industry; })); //TODO: Fix this - breaking on ordinal.
+
+			// debugger;
+			//TODO: Fix this - breaking on ordinal.
+			// xAxis.domain(filtered.map(function(d) { return d.industry; })); 
 			
 			chart.call(xAxis);
 			// chart.call(yAxis);
+
+
 
 			// UPDATING THE REGION
 	   		function update(d) {

@@ -34,6 +34,9 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 5. ~~Total population (Saudi, non-Saudi) data.~~ 
 6. ~~Input `.csv` for dynamic bar chart.~~
 7. Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.
+  * Default: Keep region highlighted and bar chart label.
+  * Hover: Change bar chart and labels?
+  * Click: Keep region highlighted and bar chart label. 
 8. Better way to toggle between graphs? 
 9. Update spellings, according to last Slack updates.
 10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
