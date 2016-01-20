@@ -386,9 +386,8 @@
 			})
 
 			var bar = chart.selectAll("g")
-				.data(filtered);
-
-			bar.enter()
+				.data(filtered)
+				.enter()
 				.append("g")
 				.attr("class", function(d) { return "bar " + d.region; })
 				.attr("transform", function(d, i) { return "translate(" + (i * barWidth * 2 + 3*(w/4)) + ",0)"; });
@@ -455,25 +454,62 @@
 				console.log("After filtering.");
 				console.log(filtered);
 
-				console.log(chart.selectAll(".bar"));
+				// console.log(chart.selectAll(".bar"));
 
+				console.log(bar)
 				// THE PROBLEM IS HERE!!!
-				chart.selectAll(".bar")
-					.data(filtered)
-					.enter()
+				bar = d3.selectAll('.bar').data(filtered)
+
+				var new_bars = bar.enter()
 					.append("g")
+					.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; })
+					
+				new_bars.append("rect")
+					.attr("width", barWidth)
+					.attr("class", "bars saudi");
+
+				new_bars.append("rect")
+					.attr("width", barWidth)
+					.attr("class","bars expat");
+
+
+
+				console.log(bar);
+
+				bar.exit().remove();
+
+				bar
 					.attr("class", function(d) { 
 						// ok, this is not showing up
 						console.log("Adding the new class...")
 						return "bar " + d.region; 
-						})
-					.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
-
-				console.log(d3.selectAll(".bar"));
-
-				bar.exit().remove();
+					});
 				
 				// debugger;
+
+				
+				saudiRects = d3.selectAll(".bar.saudi")
+
+				;
+				expatRects = d3.selectAll(".bar.expat");
+
+			// saudiRects.attr("height", function(d) { 
+			// 		return h/3 - y(d.Saudi);
+			// 	})
+			// 	.attr("y", function(d) { return y(d.Saudi); })
+			// 	.attr("class", function(d) { return "bars saudi " + d.industry; })
+				
+
+			// // NON-SAUDI
+			// expatRects = bar.append("rect")
+			// 	.attr("width", barWidth);
+
+			// expatRects.attr("height", function(d) { 
+			// 		return h/3 - y(d['Non-Saudi']);
+			// 	})
+			// 	.attr("y", function(d) { return y(d['Non-Saudi']); })
+			// 	.attr("class", function(d) { return "bars expat " + d.industry; })
+
 
 				saudiRects.transition()
 					.attr("height", function(d) { 
