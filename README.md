@@ -23,6 +23,7 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 * [Mike Bostock - Pie chart](http://bl.ocks.org/mbostock/3887235)
 * [Mike Bostock - Pie multiples](http://bl.ocks.org/mbostock/1305111)
 * [Mike Bostock - Pie chart update II](http://bl.ocks.org/mbostock/1346410)
+* [Mike Bostock - Thinking with joins](http://bost.ocks.org/mike/join/)
 * [Stack Overflow - "update angles of multiple pie on map in d3.js"](https://stackoverflow.com/questions/23186449/update-angles-of-multiple-pie-on-map-in-d3-js)
 * [mapsam.com - D3 Background Hash Patterns](http://mapsam.com/posts/d3-background-hash/)
 
@@ -53,5 +54,6 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button?)
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
+21. Why does update only work the first time, but not subsequent times?
 
 

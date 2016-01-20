@@ -443,22 +443,22 @@
 	   			d3.select(this).attr("class", "moused");
 				userProvince = d.id;
 
-				console.log("First filtered data:");
-				console.log(filtered);
+				// console.log("First filtered data:");
+				// console.log(filtered);
 
 				filtered = data.filter(function(row) {
 					console.log("Filtering...");
 					return row['region'] == userProvince;
 				});
 
-				console.log("After filtering.");
-				console.log(filtered);
+				// console.log("After filtering.");
+				// console.log(filtered);
 
 				// console.log(chart.selectAll(".bar"));
 
-				console.log(bar)
-				// THE PROBLEM IS HERE!!!
-				bar = d3.selectAll('.bar').data(filtered)
+				console.log(bar);
+
+				bar = d3.selectAll('.bar').data(filtered);
 
 				var new_bars = bar.enter()
 					.append("g")
@@ -472,55 +472,33 @@
 					.attr("width", barWidth)
 					.attr("class","bars expat");
 
-
-
-				console.log(bar);
-
 				bar.exit().remove();
 
-				bar
-					.attr("class", function(d) { 
-						// ok, this is not showing up
-						console.log("Adding the new class...")
+				bar.attr("class", function(d) { 
+						console.log("Adding the new class..." + d.region)
 						return "bar " + d.region; 
 					});
 				
 				// debugger;
 
-				
-				saudiRects = d3.selectAll(".bar.saudi")
-
-				;
-				expatRects = d3.selectAll(".bar.expat");
-
-			// saudiRects.attr("height", function(d) { 
-			// 		return h/3 - y(d.Saudi);
-			// 	})
-			// 	.attr("y", function(d) { return y(d.Saudi); })
-			// 	.attr("class", function(d) { return "bars saudi " + d.industry; })
-				
-
-			// // NON-SAUDI
-			// expatRects = bar.append("rect")
-			// 	.attr("width", barWidth);
-
-			// expatRects.attr("height", function(d) { 
-			// 		return h/3 - y(d['Non-Saudi']);
-			// 	})
-			// 	.attr("y", function(d) { return y(d['Non-Saudi']); })
-			// 	.attr("class", function(d) { return "bars expat " + d.industry; })
-
-
+				saudiRects = chart.selectAll(".bars.saudi");
+				console.log(saudiRects);
 				saudiRects.transition()
 					.attr("height", function(d) { 
-						return h/3 - y(d.Saudi);
+						return h/3 - y(this.parentNode.__data__.Saudi);
 					})
-					.attr("y", function(d) { return y(d.Saudi); })
-					.attr("class", function(d) { return "Saudi " + d.industry; })
+					.attr("y", function(d) { return y(this.parentNode.__data__.Saudi); });
 
-				// expatRects.attr("height")
+				expatRects = chart.selectAll(".bars.expat");
+				console.log(expatRects);
+				expatRects.transition()
+					.attr("height", function(d) {
+						return h/3 - y(this.parentNode.__data__['Non-Saudi']);	
+						})
+					.attr("y", function(d) { return y(this.parentNode.__data__['Non-Saudi']); });
 
 			} //update func
+
 
 			// HIGHLIGHT THE SELECTED USER PROVINCE
 			d3.select(".map").selectAll("path")
