@@ -275,7 +275,7 @@
 
 		   });
 
-		}
+		} //userButtons
  
 
 		function drawMap(json) {
@@ -439,26 +439,41 @@
 			// UPDATING THE REGION
 	   		function update(d) {
 
+	   			console.log("In the update function.");
+
 	   			d3.select(this).attr("class", "moused");
 				userProvince = d.id;
 
+				console.log("First filtered data:");
+				console.log(filtered);
+
 				filtered = data.filter(function(row) {
+					console.log("Filtering...");
 					return row['region'] == userProvince;
 				});
 
-				// chart.selectAll(".bar")
-				chart.selectAll("g")
+				console.log("After filtering.");
+				console.log(filtered);
+
+				console.log(chart.selectAll(".bar"));
+
+				// THE PROBLEM IS HERE!!!
+				chart.selectAll(".bar")
 					.data(filtered)
 					.enter()
 					.append("g")
-					.attr("class", function(d) { return "bar " + d.region; })
+					.attr("class", function(d) { 
+						// ok, this is not showing up
+						console.log("Adding the new class...")
+						return "bar " + d.region; 
+						})
 					.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; });
 
 				console.log(d3.selectAll(".bar"));
 
 				bar.exit().remove();
 				
-				debugger;
+				// debugger;
 
 				saudiRects.transition()
 					.attr("height", function(d) { 
