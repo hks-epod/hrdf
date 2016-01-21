@@ -356,8 +356,6 @@
 
 		function drawBars(new_csv) {
 
-			console.log(userProvince);
-
 			data = new_csv;
 
 			var barWidth = 10;
@@ -377,10 +375,10 @@
 			var chart = d3.select("svg")
 				.append("g")
 				.attr("class", "chart")
-					.attr("transform", "translate(-120, 150)");
+					.attr("transform", "translate(-300, 75)");
 
 			
-			// DATA JOIN
+			// FILTERING THE DATA
 			filtered = data.filter(function(row) {
 				return row['region'] == "Riyadh";
 			})
@@ -443,20 +441,10 @@
 	   			d3.select(this).attr("class", "moused");
 				userProvince = d.id;
 
-				// console.log("First filtered data:");
-				// console.log(filtered);
-
 				filtered = data.filter(function(row) {
 					console.log("Filtering...");
 					return row['region'] == userProvince;
 				});
-
-				// console.log("After filtering.");
-				// console.log(filtered);
-
-				// console.log(chart.selectAll(".bar"));
-
-				console.log(bar);
 
 				bar = d3.selectAll('.bar').data(filtered);
 
@@ -479,8 +467,7 @@
 						return "bar " + d.region; 
 					});
 				
-				// debugger;
-
+				// UPDATING THE BAR CHART
 				saudiRects = chart.selectAll(".bars.saudi");
 				saudiRects.transition()
 					.attr("height", function(d) { 
@@ -495,6 +482,9 @@
 						})
 					.attr("y", function(d) { return y(this.parentNode.__data__['Non-Saudi']); });
 
+				d3.select(this)
+					.attr("class", "moused");
+
 			} //update func
 
 
@@ -504,9 +494,9 @@
 	   			.on("mouseout", demoused)
 	   			.on("click", update);
 
-	   		d3.select("path#Riyadh")
-	   			.attr("class", "moused")
-	   			.on("mouseout", null);
+	   		// d3.select("path#Riyadh")
+	   		// 	.attr("class", "moused")
+	   		// 	.on("mouseout", null);
 
 		} //drawBars
 

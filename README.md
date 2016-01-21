@@ -55,5 +55,6 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
 21. ~~Why does update only work the first time, but not subsequent times?~~
+22. By region: Fix mouseout classes.
 
 
