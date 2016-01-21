@@ -482,7 +482,6 @@
 				// debugger;
 
 				saudiRects = chart.selectAll(".bars.saudi");
-				console.log(saudiRects);
 				saudiRects.transition()
 					.attr("height", function(d) { 
 						return h/3 - y(this.parentNode.__data__.Saudi);
@@ -490,7 +489,6 @@
 					.attr("y", function(d) { return y(this.parentNode.__data__.Saudi); });
 
 				expatRects = chart.selectAll(".bars.expat");
-				console.log(expatRects);
 				expatRects.transition()
 					.attr("height", function(d) {
 						return h/3 - y(this.parentNode.__data__['Non-Saudi']);	

@@ -54,6 +54,6 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button?)
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
-21. Why does update only work the first time, but not subsequent times?
+21. ~~Why does update only work the first time, but not subsequent times?~~
 
 
