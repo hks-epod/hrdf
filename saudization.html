@@ -193,18 +193,6 @@
 		};
 
 
-		function hover(d) {
-			d3.select(this).attr("class", "moused");
-			hoverProvince = d.id;
-			
-			d3.select("#chartTitle")
-				.text(hoverProvince)
-				.classed("title", false)
-				.classed("hoverTitle", true)
-				.attr("fill", "#ececec");
-		}
-
-
 		function demoused(d) {
 			d3.select(this).attr("class", "nomouse");
 
@@ -375,7 +363,7 @@
 			var chart = d3.select("svg")
 				.append("g")
 				.attr("class", "chart")
-					.attr("transform", "translate(-300, 75)");
+					.attr("transform", "translate(-350, 50)");
 
 			
 			// FILTERING THE DATA
@@ -438,8 +426,14 @@
 
 	   			console.log("In the update function.");
 
+	   			d3.select("path#Riyadh").attr("class", "nomouse");
 	   			d3.select(this).attr("class", "moused");
 				userProvince = d.id;
+
+				d3.select("#chartTitle").text(userProvince);
+					// .classed("title", false)
+					// .classed("hoverTitle", true)
+					// .attr("fill", "#ececec");
 
 				filtered = data.filter(function(row) {
 					console.log("Filtering...");
@@ -480,23 +474,17 @@
 					.attr("height", function(d) {
 						return h/3 - y(this.parentNode.__data__['Non-Saudi']);	
 						})
-					.attr("y", function(d) { return y(this.parentNode.__data__['Non-Saudi']); });
-
-				d3.select(this)
-					.attr("class", "moused");
+					.attr("y", function(d) { return y(this.parentNode.__data__['Non-Saudi']); });				
 
 			} //update func
 
 
 			// HIGHLIGHT THE SELECTED USER PROVINCE
 			d3.select(".map").selectAll("path")
-				.on("mouseover", hover)
-	   			.on("mouseout", demoused)
-	   			.on("click", update);
+				.on("mouseover", update)
+	   			.on("mouseout", demoused);
 
-	   		// d3.select("path#Riyadh")
-	   		// 	.attr("class", "moused")
-	   		// 	.on("mouseout", null);
+	   		d3.select("path#Riyadh").attr("class", "moused");
 
 		} //drawBars
 
