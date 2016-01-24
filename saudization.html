@@ -100,6 +100,15 @@
 			left: 50px;
 		}
 
+		.menu {
+			position: absolute;
+			width: 200px;
+			top: 350px;
+			left: 50px;
+			font: 200 18px 'Franklin Gothic Medium', sans-serif;
+			color: #ababab;
+		}
+
 		</style>
 	</head>
 
@@ -115,6 +124,8 @@
 			<p><span id="byIndustry" class="button">By industry</span></p>
 			<p><span id="byRegion" class="button">By region</span></p>
 		</div>
+
+		<div id="industryMenu"></div>
 
 		<script type="text/javascript">
 
@@ -218,8 +229,11 @@
 			var toggle = false;
 
 			d3.selectAll("#byWorkforce").on("click", function() {
-				toggle = !toggle;
+				
+				d3.select(".menu").remove();
 				d3.selectAll(".chart").remove();
+				toggle = !toggle;
+				
 
 				d3.select(".map").selectAll("path")
 		   				.on("mouseover", null)
@@ -229,6 +243,7 @@
 
 				if (toggle == true) {
 					d3.select(".chart").remove();
+					d3.select(".menu").remove();
 					d3.select("#byWorkforce").classed("button selected", true);
 					drawPies(csv);		
 				}
@@ -243,6 +258,7 @@
 		   d3.select("#byRegion").on("click", function() {
 
 		   		d3.selectAll("circle").remove(); 
+		   		d3.select(".menu").remove();
 		   		toggle = !toggle;
 
 		   		if (toggle == true) {
@@ -260,10 +276,34 @@
 
 		   			d3.selectAll(".button").classed("selected", false);
 		   		}
+		   	});
 
-		   });
+		   	d3.select("#byIndustry").on("click", function() {
 
-		} //userButtons
+		   		d3.select("circle").remove();
+		   		d3.select(".menu").remove();
+		   		toggle = !toggle; 
+
+		   		if (toggle == true) {
+		   			d3.select(".circleLayer").remove();
+		   			d3.select("#byIndustry").classed("button selected", true);
+		   			drawIndustries(new_csv);
+		   		}
+		   		else if (toggle == false) {
+		   			d3.select(".chart").remove();
+		   			d3.select(".menu").remove();
+		   			
+		   			d3.select(".map").selectAll("path")
+		   				.on("mouseover", null)
+		   				.on("mouseout", null)
+		   				.classed("nomouse", true)
+		   				.classed("moused", false);
+
+		   			d3.selectAll(".button").classed("selected", false);
+		   		}
+		   	});
+
+		};
  
 
 		function drawMap(json) {
@@ -480,7 +520,6 @@
 
 			} //update func
 
-
 			// HIGHLIGHT THE SELECTED USER PROVINCE
 			d3.select(".map").selectAll("path")
 				.on("mouseover", update)
@@ -490,7 +529,30 @@
 
 		} //drawBars
 
-					
+
+		function drawIndustries(new_csv) {
+			by_industry = d3.nest()
+							.key(function(d) { return d.industry; })
+							.entries(new_csv);
+
+			console.log(by_industry);
+
+			var dropdown = d3.select("#industryMenu")
+				.append("p")
+				.attr("class", "menu")
+				.text("Select an industry: ")
+				.append("p")
+				.append("select");
+			
+			dropdown.selectAll("option")
+				.data(by_industry)
+				.enter()
+				.append("option")
+				.attr("value", function (d) { return d.key; })
+				.text(function (d) { return d.key; });
+
+		}
+			
 			
 		</script>
 	</body>

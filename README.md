@@ -34,10 +34,10 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 4. ~~Workforce population.~~
 5. ~~Total population (Saudi, non-Saudi) data.~~ 
 6. ~~Input `.csv` for dynamic bar chart.~~
-7. Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.
+7. ~~Linking the map to `d3.filter`/`d3.update` of the dynamic bar chart.~~
   * ~~Default: Keep region highlighted and bar chart label.~~
-  * Hover: Change bar chart and ~~labels~~?
-  * Click: Keep region highlighted and bar chart label. 
+  * ~~Hover: Change bar chart and labels~~?
+  * ~~Click: Keep region highlighted and bar chart label.~~ 
 8. Better way to toggle between graphs?
 9. Update spellings, according to last Slack updates.
 10. ~~Kill overlapping circles; pie charts (vary `r`) instead.~~
@@ -48,13 +48,16 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 12. ~~Turn off province highlighting when not in `#byRegion`.~~
 13. ~~Pie chart: colors?~~
 14. ~~Pie chart: Tooltips over each slice?~~
-15. Industry viz: start that function. 
+15. ~~Industry viz: start that function.~~ 
 16. Explanatory captions.
 17. Bar chart: axes, legend.
 18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button?)
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
 21. ~~Why does update only work the first time, but not subsequent times?~~
-22. By region: Fix mouseout classes.
-
+22. ~~By region: Fix mouseout classes.~~
+23. ~~Stack charts.~~
+24. ~~Industry viz: Dropdown menu for all industries.~~
+25. Industry viz: Update via dropdown. 
+26. Industry viz: First chart. 
 
