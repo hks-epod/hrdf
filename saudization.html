@@ -383,9 +383,9 @@
 				.attr("width", barWidth);
 
 			saudiRects.attr("height", function(d) { 
-					return h/3 - y(d.Saudi);
+					return y(d.Saudi);
 				})
-				.attr("y", function(d) { return y(d.Saudi); })
+				.attr("y", function(d) { return h/3 - y(d.Saudi); })
 				.attr("class", function(d) { return "bars saudi " + d.industry; })
 				
 
@@ -394,9 +394,11 @@
 				.attr("width", barWidth);
 
 			expatRects.attr("height", function(d) { 
-					return h/3 - y(d['Non-Saudi']);
+					// return y(d.Saudi) - y(d['Non-Saudi']);
+					// return h/3 - y(d.Saudi) - y(d['Non-Saudi']);
+					return y(d['Non-Saudi']);
 				})
-				.attr("y", function(d) { return y(d['Non-Saudi']); })
+				.attr("y", function(d) { return h/3 - y(d.Saudi) - y(d['Non-Saudi']); })
 				.attr("class", function(d) { return "bars expat " + d.industry; })
 
 			// BAR CHART TITLE
@@ -424,8 +426,6 @@
 			// UPDATING THE REGION
 	   		function update(d) {
 
-	   			console.log("In the update function.");
-
 	   			d3.select("path#Riyadh").attr("class", "nomouse");
 	   			d3.select(this).attr("class", "moused");
 				userProvince = d.id;
@@ -436,7 +436,6 @@
 					// .attr("fill", "#ececec");
 
 				filtered = data.filter(function(row) {
-					console.log("Filtering...");
 					return row['region'] == userProvince;
 				});
 
@@ -457,7 +456,6 @@
 				bar.exit().remove();
 
 				bar.attr("class", function(d) { 
-						console.log("Adding the new class..." + d.region)
 						return "bar " + d.region; 
 					});
 				
@@ -465,16 +463,20 @@
 				saudiRects = chart.selectAll(".bars.saudi");
 				saudiRects.transition()
 					.attr("height", function(d) { 
-						return h/3 - y(this.parentNode.__data__.Saudi);
+						return y(this.parentNode.__data__.Saudi);
 					})
-					.attr("y", function(d) { return y(this.parentNode.__data__.Saudi); });
+					.attr("y", function(d) { 
+						return h/3 - y(this.parentNode.__data__.Saudi); 
+						});
 
 				expatRects = chart.selectAll(".bars.expat");
 				expatRects.transition()
 					.attr("height", function(d) {
-						return h/3 - y(this.parentNode.__data__['Non-Saudi']);	
+						return y(this.parentNode.__data__['Non-Saudi']);	
 						})
-					.attr("y", function(d) { return y(this.parentNode.__data__['Non-Saudi']); });				
+					.attr("y", function(d) { 
+						return h/3 - y(this.parentNode.__data__.Saudi) - y(this.parentNode.__data__['Non-Saudi']); 
+						});				
 
 			} //update func
 
