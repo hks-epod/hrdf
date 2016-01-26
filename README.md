@@ -60,10 +60,9 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 23. ~~Stack charts.~~
 24. ~~Industry viz: Dropdown menu for all industries.~~
 25. Industry viz: Update via dropdown. 
-26. Industry viz: First chart. 
+26. Industry viz: First chart. Default to Construction? 
 27. By region: Fix mouseout title.
 28. By region: `click` fixes the region.
 29. By region: Mouseover captions.
-30. Industry viz: Default to Construction? 
-31. ~~Merge lat/lon data into `industries.csv`.~~ _Check that the pandas merge worked!_
+30. ~~Merge lat/lon data into `industries.csv`.~~ _Check that the pandas merge worked!_
 

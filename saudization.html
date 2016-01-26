@@ -566,14 +566,14 @@
 				return row['key'] == product;
 			})
 			filtered = filtered[0];
-			console.log(filtered);
 
-			radius.domain([1, d3.max(filtered['values'], function(d) { return d.Total; })]);
+			radius.domain([1, d3.max(filtered['values'], function(d) { return d.total; })]);
 			
 			arc.innerRadius(0)
 				.outerRadius(function(d) { 
-					console.log(this);
-					return radius(this.parentNode.__data__.Total); 
+					console.log(this.parentNode.__data__);
+					console.log(this.parentNode.__data__['total']);
+					return radius(this.parentNode.__data__.total); 
 					});
 
 			pie.value(function(d) { return d; });
@@ -586,30 +586,27 @@
 				.data(filtered['values'])
 				.enter()
 				.append("g")
-				.attr("id", function(d) { 
-					console.log(d);
-					return d.province; 
-					})
-				.attr("class", "donut");
-    			// .attr("transform", function(d) {
-    			// 	return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
-    			// 	});
+				.attr("id", function(d) { return d.province; })
+				.attr("class", "donut")
+    			.attr("transform", function(d) {
+    				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
+    				});
 
-			// donuts.selectAll(".slice")
-			// 	.data(function(d) {
-			// 		return pie([d['Saudi'], d['Non-Saudi']]);
-			// 	})
-			// 	.enter()
-			// 	.append('path')
-			// 	.attr('d',  arc)
-			// 	.attr('class', 'slice')
-			// 	.attr('class', function(d, i) { 
-			// 		// Terrible hack
-			// 		if (i==0) { return "saudi"; }
-			// 		if (i==1) { return "expat"; }
-			// 	})
-			// 	.on("mouseover", mouseover)
-	  //  			.on("mouseout", mouseout);
+			donuts.selectAll(".donutslice")
+				.data(function(d) {
+					return pie([d['Saudi'], d['Non-Saudi']]);
+				})
+				.enter()
+				.append('path')
+				.attr('d',  arc)
+				.attr('class', 'donutslice')
+				.attr('class', function(d, i) { 
+					// Terrible hack from above
+					if (i==0) { return "saudi"; } //SAUDI-INVISIBLE class, yet more hacky
+					if (i==1) { return "expat"; }
+				});
+				// .on("mouseover", mouseover)
+	   // 			.on("mouseout", mouseout);
 
 		}
 			

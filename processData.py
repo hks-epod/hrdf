@@ -36,17 +36,11 @@ print "\n"
 df = df.rename(columns={'region': 'province'})
 coords = df2[['province','lat','lon']]
 
-print df.shape
-print coords.shape
-
 # I think non-merged obs are dropping
 result = pd.merge(coords, df, on=['province'], how='inner')
-print result.shape
-print result.tail()
-
-print result.columns.values
 result = result.drop(['%Saudi', '%Non-Saudi'], 1)
-print result.columns.values
+result = result.rename(columns={'Total ': 'total'})
+
 
 result.to_csv('_data/donuts.csv', index=False)
 
