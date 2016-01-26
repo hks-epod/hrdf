@@ -16,14 +16,12 @@ with open('_geo/saudi_comp.json') as data_file:
 # ['Riyadh' 'Makkah' 'Eastern Province' 'Qassim' 'Madinah' 'Asir' 'Tabuk'
 #  'Hail' 'Northern Border' 'Jazab' 'Al Baha' 'Al Joaf' 'Najran']
 
-
-
 # FOR SLACK
-print "Province names as they appear in By Industry chart:"
+print "Province names as they appear in By Industry chart (industries.csv):"
 print df['region'].unique()
 print "\n"
 
-print "Province names as they appear in By Province chart:"
+print "Province names as they appear in By Province chart (capitals.csv):"
 print df2['province'].unique()
 print "\n"
 
@@ -33,5 +31,19 @@ for item in data['objects']['saudi']['geometries']:
 	shapenames.append(item['id'])
 print shapenames
 print "\n"
+
+# Merging capital lat/lon data into industries
+df = df.rename(columns={'region': 'province'})
+coords = df2[['province','lat','lon']]
+
+print df.shape
+print coords.shape
+
+# I think non-merged obs are dropping
+result = pd.merge(coords.reset_index(), df.reset_index(), on=['province'], how='inner')
+print result.shape
+print result.tail()
+
+result.to_csv('_data/donuts.csv')
 
 

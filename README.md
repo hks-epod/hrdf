@@ -26,6 +26,7 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 * [Mike Bostock - Thinking with joins](http://bost.ocks.org/mike/join/)
 * [Stack Overflow - "update angles of multiple pie on map in d3.js"](https://stackoverflow.com/questions/23186449/update-angles-of-multiple-pie-on-map-in-d3-js)
 * [mapsam.com - D3 Background Hash Patterns](http://mapsam.com/posts/d3-background-hash/)
+* [Pandas documentation - Merging, appending, concatenating, joining](http://pandas.pydata.org/pandas-docs/stable/merging.html)
 
 ## TODOs
 1. ~~`git`.~~
@@ -60,4 +61,9 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 24. ~~Industry viz: Dropdown menu for all industries.~~
 25. Industry viz: Update via dropdown. 
 26. Industry viz: First chart. 
+27. By region: Fix mouseout title.
+28. By region: `click` fixes the region.
+29. By region: Mouseover captions.
+30. Industry viz: Default to Construction? 
+31. ~~Merge lat/lon data into `industries.csv`.~~ _Check that the pandas merge worked!_
 
