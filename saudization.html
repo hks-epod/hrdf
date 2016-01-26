@@ -154,7 +154,7 @@
 		queue()
 			.defer(d3.json, "_geo/saudi_comp.json")
 			.defer(d3.csv, "_data/capitals.csv", processCapitals)
-			.defer(d3.csv, "_data/industries.csv")
+			.defer(d3.csv, "_data/donuts.csv")
 			.await(ready);
 		
 		//THE FUNCTION THAT CALLS THE OTHER DRAW FUNCTIONS
@@ -408,14 +408,14 @@
 			
 			// FILTERING THE DATA
 			filtered = data.filter(function(row) {
-				return row['region'] == "Riyadh";
+				return row['province'] == "Riyadh";
 			})
 
 			var bar = chart.selectAll("g")
 				.data(filtered)
 				.enter()
 				.append("g")
-				.attr("class", function(d) { return "bar " + d.region; })
+				.attr("class", function(d) { return "bar " + d.province; })
 				.attr("transform", function(d, i) { return "translate(" + (i * barWidth * 2 + 3*(w/4)) + ",0)"; });
 
 			// SAUDI 
@@ -463,7 +463,7 @@
 
 
 
-			// UPDATING THE REGION
+			// UPDATING THE province
 	   		function update(d) {
 
 	   			d3.select("path#Riyadh").attr("class", "nomouse");
@@ -476,7 +476,7 @@
 					// .attr("fill", "#ececec");
 
 				filtered = data.filter(function(row) {
-					return row['region'] == userProvince;
+					return row['province'] == userProvince;
 				});
 
 				bar = d3.selectAll('.bar').data(filtered);
@@ -496,7 +496,7 @@
 				bar.exit().remove();
 
 				bar.attr("class", function(d) { 
-						return "bar " + d.region; 
+						return "bar " + d.province; 
 					});
 				
 				// UPDATING THE BAR CHART
@@ -535,6 +535,8 @@
 							.key(function(d) { return d.industry; })
 							.entries(new_csv);
 
+			console.log(by_industry);
+
 			var dropdown = d3.select("#industryMenu")
 				.append("p")
 				.attr("class", "menu")
@@ -551,8 +553,8 @@
 
 			dropdown
 				.on("change", function(d) {
-					product = d3.select(this).property("value");
-					drawDonuts(product);
+						product = d3.select(this).property("value");
+						drawDonuts(product);
 					});
 
 		}
@@ -564,6 +566,7 @@
 				return row['key'] == product;
 			})
 			filtered = filtered[0];
+			console.log(filtered);
 
 			radius.domain([1, d3.max(filtered['values'], function(d) { return d.Total; })]);
 			
@@ -585,7 +588,7 @@
 				.append("g")
 				.attr("id", function(d) { 
 					console.log(d);
-					return d.region; 
+					return d.province; 
 					})
 				.attr("class", "donut");
     			// .attr("transform", function(d) {

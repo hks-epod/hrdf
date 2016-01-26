@@ -40,10 +40,14 @@ print df.shape
 print coords.shape
 
 # I think non-merged obs are dropping
-result = pd.merge(coords.reset_index(), df.reset_index(), on=['province'], how='inner')
+result = pd.merge(coords, df, on=['province'], how='inner')
 print result.shape
 print result.tail()
 
-result.to_csv('_data/donuts.csv')
+print result.columns.values
+result = result.drop(['%Saudi', '%Non-Saudi'], 1)
+print result.columns.values
+
+result.to_csv('_data/donuts.csv', index=False)
 
 
