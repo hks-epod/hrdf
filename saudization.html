@@ -134,7 +134,8 @@
 			h = 500,
 			pie = d3.layout.pie(),
 			radius = d3.scale.sqrt().range([5, 30]),
-			arc = d3.svg.arc();
+			arc = d3.svg.arc(),
+			donutLayer;
 
 
 		// Rotating the Earth here...
@@ -553,6 +554,13 @@
 			dropdown
 				.on("change", function(d) {
 						product = d3.select(this).property("value");
+
+						d3.select(".donutLayer").remove();
+
+						donutLayer = d3.select("svg")
+							.append("g")
+							.attr("class", "donutLayer");
+						
 						drawDonuts(product);
 					});
 
@@ -579,20 +587,19 @@
 				.outerRadius(function(d) { return radius(this.parentNode.__data__['total']); });
 
 			pie.value(function(d) { return d; });
-		
-			var donutLayer = d3.select("svg")
-							.append("g")
-							.attr("class", "donutLayer");
 
 			var donuts = donutLayer.selectAll(".donut")
-				.data(filtered['values'])
-				.enter()
+				.data(filtered['values']);
+
+			donuts.enter()
 				.append("g")
 				.attr("id", function(d) { return d.province; })
 				.attr("class", "donut")
     			.attr("transform", function(d) {
     				return "translate(" + projection([d.lon, d.lat])[0] + "," + projection([d.lon, d.lat])[1] + ")";
     				});
+
+    		donuts.exit().remove(); 
 
 			donuts.selectAll(".donutslice")
 				.data(function(d) {
