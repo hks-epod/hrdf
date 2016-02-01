@@ -52,14 +52,14 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 15. ~~Industry viz: start that function.~~ 
 16. Explanatory captions.
 17. Bar chart: axes, legend.
-18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button?)
+18. For each chart: highlight the pies/bars where Saudi > expat and expat > Saudi. (Small circle button? Caption/subtitle?)
 19. Fix `xAxis`. 
 20. ~~Bold/highlight the "by..." user selection.~~
 21. ~~Why does update only work the first time, but not subsequent times?~~
 22. ~~By region: Fix mouseout classes.~~
 23. ~~Stack charts.~~
 24. ~~Industry viz: Dropdown menu for all industries.~~
-25. Industry viz: Update via dropdown. 
+25. ~~Industry viz: Update via dropdown.~~
 26. Industry viz: First chart. Default to Construction? 
 27. By region: Fix mouseout title.
 28. By region: `click` fixes the region.
