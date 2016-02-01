@@ -133,8 +133,7 @@
 		var w = 1200,
 			h = 500,
 			pie = d3.layout.pie(),
-			radius = d3.scale.sqrt()
-						.range([5, 30]),
+			radius = d3.scale.sqrt().range([5, 30]),
 			arc = d3.svg.arc();
 
 
@@ -567,14 +566,17 @@
 			})
 			filtered = filtered[0];
 
-			radius.domain([1, d3.max(filtered['values'], function(d) { return d.total; })]);
+			maxValue = 0
+			filtered['values'].forEach(function(d) {
+				if (+d.total >= maxValue) {
+					maxValue = +d.total;
+				}
+			})
+
+			radius.domain([1, maxValue]);
 			
 			arc.innerRadius(0)
-				.outerRadius(function(d) { 
-					console.log(this.parentNode.__data__);
-					console.log(this.parentNode.__data__['total']);
-					return radius(this.parentNode.__data__.total); 
-					});
+				.outerRadius(function(d) { return radius(this.parentNode.__data__['total']); });
 
 			pie.value(function(d) { return d; });
 		
