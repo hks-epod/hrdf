@@ -7,6 +7,7 @@
 		<script src="http://d3js.org/topojson.v1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
 		<link href='https://fonts.googleapis.com/css?family=Nunito:300,400' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
 		<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 
@@ -45,11 +46,15 @@
 		
 		#tooltip p {
 			margin: 0;
-			font: 300 16px/20px 'Nunito', sans-serif;
+			font: 300 16px/20px 'Roboto', sans-serif;
 		}
 
 		.title, .hoverTitle {
 		  font: 200 42px 'Franklin Gothic Medium', sans-serif;
+		}
+
+		#provinceName {
+			font: 200 16px/20px 'Franklin Gothic Medium', sans-serif;
 		}
 
 		.title {
@@ -75,7 +80,14 @@
 
 		.saudi {
 			fill: #ffffad;
-			stroke-width: "1px";
+			stroke-width: 1px;
+			stroke: #ffd6ad;
+		}
+
+		.saudi-hidden {
+			fill: #ffffad;
+			fill-opacity: 0;
+			stroke-width: 1px;
 			stroke: #ffd6ad;
 		}
 
@@ -98,6 +110,7 @@
 			width: 200px;
 			top: 200px;
 			left: 50px;
+			font: 200 20px/24px 'Roboto', sans-serif;
 		}
 
 		.menu {
@@ -105,7 +118,7 @@
 			width: 200px;
 			top: 350px;
 			left: 50px;
-			font: 200 18px 'Franklin Gothic Medium', sans-serif;
+			font: 200 18px 'Roboto', sans-serif;
 			color: #ababab;
 		}
 
@@ -165,6 +178,10 @@
 
 
 		function mouseover(d) {
+			console.log(this.__data__);
+			console.log(this.parentNode);
+			console.log(this.parentNode.__data__);
+
 			var comma = d3.format(",");
 			var mousecoord = [0,0],
 				mousecoord = d3.mouse(this),
@@ -539,8 +556,6 @@
 							.key(function(d) { return d.industry; })
 							.entries(new_csv);
 
-			console.log(by_industry);
-
 			var dropdown = d3.select("#industryMenu")
 				.append("p")
 				.attr("class", "menu")
@@ -571,7 +586,6 @@
 		}
 
 		function drawDonuts(selectedIndustry) {
-			console.log("Changed to " + selectedIndustry);
 
 			filtered = by_industry.filter(function(row) {
 				return row['key'] == product;
@@ -586,9 +600,9 @@
 			})
 
 			radius.domain([1, maxValue])
-				.range([10,30]);
+				.range([5,20]);
 			
-			arc.innerRadius(7)
+			arc.innerRadius(function(d) { return radius(this.parentNode.__data__['total'] * 5)})
 				.outerRadius(function(d) { return radius(this.parentNode.__data__['total']); });
 
 			pie.value(function(d) { return d; });
@@ -615,12 +629,11 @@
 				.attr('d',  arc)
 				.attr('class', 'donutslice')
 				.attr('class', function(d, i) { 
-					// Terrible hack from above
-					if (i==0) { return "saudi"; } //SAUDI-INVISIBLE class, yet more hacky
+					if (i==0) { return "saudi-hidden"; } 
 					if (i==1) { return "expat"; }
-				});
-				// .on("mouseover", mouseover)
-	   // 			.on("mouseout", mouseout);
+				})
+				.on("mouseover", mouseover)
+	   			.on("mouseout", mouseout);
 
 		}
 			

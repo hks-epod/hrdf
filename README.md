@@ -65,4 +65,6 @@ topojson -o saudi_comp.json --id-property NAME_1 saudi.json
 28. By region: `click` fixes the region.
 29. By region: Mouseover captions.
 30. ~~Merge lat/lon data into `industries.csv`.~~ _Check that the pandas merge worked!_
+31. By industry: Mouseover captions.
+
 
