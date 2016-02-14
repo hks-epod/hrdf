@@ -1,0 +1,115 @@
+div {
+	font: 200 20px/24px 'Franklin Gothic Medium', sans-serif;
+}
+
+.button {
+	background-color: white;
+	color: #ababab;
+}
+
+.selected {
+	background-color: #ababab;
+	color: white;
+} 
+
+#tooltip {
+	position: absolute;
+	width: 250px;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+}
+
+#tooltip.hidden {
+	display: none;
+}
+
+#tooltip p {
+	margin: 0;
+	font: 300 16px/20px 'Roboto', sans-serif;
+}
+
+.title, .hoverTitle {
+  font: 200 42px 'Franklin Gothic Medium', sans-serif;
+}
+
+#provinceName {
+	font: 200 16px/20px 'Franklin Gothic Medium', sans-serif;
+}
+
+.title {
+	fill: #d2d2d2;
+}
+
+.hoverTitle {
+	fill: #ececec;
+}
+
+.nomouse {
+	stroke-width: 0.75px;
+	stroke: white;
+	stroke-dasharray: 3,3;
+	fill: #66cc99;
+}
+
+.moused {
+	stroke-width: 2px;
+	stroke: yellow;
+	fill: #39ac73;
+}
+
+.saudi {
+	fill: #ffffad;
+	stroke-width: 1px;
+	stroke: #ffd6ad;
+}
+
+.saudi-hidden {
+	fill: #ffffad;
+	fill-opacity: 0;
+	stroke-width: 1px;
+	stroke: #ffd6ad;
+}
+
+.expat {
+	fill: #ffb061;
+	stroke-width: "1px";
+	stroke: #ff6161;
+}
+
+.bars {
+	opacity: 0.7;
+}
+
+.button:hover {
+	cursor: pointer;
+}
+
+#buttons {
+	position: absolute;
+	width: 200px;
+	top: 200px;
+	left: 50px;
+	font: 200 20px/24px 'Roboto', sans-serif;
+}
+
+.menu {
+	position: absolute;
+	width: 200px;
+	top: 350px;
+	left: 50px;
+	font: 200 18px 'Roboto', sans-serif;
+	color: #ababab;
+}
+
+#legend {
+	font: 200 10px 'Roboto', sans-serif;
+}
+
