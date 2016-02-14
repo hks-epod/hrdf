@@ -128,8 +128,10 @@
 	<body>
 		<div id="tooltip" class="hidden" style="left: 429px, top: 489.6px">
 			<p><strong><span id="provinceName">Riyadh</span></strong></p>
-			<p>Saudi workforce: <span id="saudi">XXX</span></p>
-			<p>Non-Saudi workforce: <span id="expats">XXX</span></p>
+			<p><span class="total-workforce"></span> Saudi workforce: <span id="saudi">XXX</span></p>
+			<p><span class="total-workforce"></span> Non-Saudi workforce: <span id="expats">XXX</span></p>
+			<br>
+			<p id="caption"></p>
 		</div>
 
 		<div id="buttons">
@@ -178,16 +180,39 @@
 
 
 		function mouseover(d) {
-			// console.log(this.__data__);
-			console.log(this);
-			console.log(this.parentNode);
-			// console.log(this.parentNode.__data__);
-
-			var comma = d3.format(",");
-			var mousecoord = [0,0],
+			var className = this.parentNode.getAttribute("class"),
+				provinceName,
+				comma = d3.format(","),
+				mousecoord = [0,0],
 				mousecoord = d3.mouse(this),
 				style = window.getComputedStyle(this, null),
-				thisColor = style['fill'];
+				thisColor = style['fill'],
+				thisIndustry = this.parentNode.__data__.industry;
+
+			var totalWorkers = parseFloat(this.parentNode.__data__.Saudi) + parseFloat(this.parentNode.__data__['Non-Saudi']),
+				percentSaudi = parseFloat(this.parentNode.__data__.Saudi) / totalWorkers,
+				percentSaudi = parseInt(percentSaudi * 100);
+
+			if (className == "donut") {
+				console.log("This is a donut.");
+				provinceName = this.parentNode.getAttribute("id");
+				d3.select("#caption")
+					.text("There are " + percentSaudi + "% Saudi workers in the " 
+							+ thisIndustry + " industry in " + provinceName + " province.");
+			
+			} else if (className == "pie") {
+				console.log("This is a pie.");
+				provinceName = this.parentNode.__data__['capital'];
+				
+				d3.select("#caption").text(null);
+				d3.selectAll(".total-workforce").text("Total");
+
+			}
+
+			console.log(this.parentNode.__data__.Saudi);
+			console.log(this.parentNode.__data__['Non-Saudi']);
+			console.log(totalWorkers);
+			console.log(percentSaudi);
 
 			d3.select("#tooltip")
 				.style("left", mousecoord[0] + w/2 + "px")
@@ -197,7 +222,7 @@
 				.style("stroke-width", "2px")
 				.style("fill", d3.rgb(thisColor).darker());
 			
-			d3.select("#provinceName").text(this.parentNode.__data__.capital + " province");
+			d3.select("#provinceName").text(provinceName + " province");
 			d3.select("#saudi").text(comma(this.parentNode.__data__.Saudi));
 			d3.select("#expats").text(comma(this.parentNode.__data__['Non-Saudi']));
 
@@ -230,9 +255,8 @@
 		function demoused(d) {
 			d3.select(this).attr("class", "nomouse");
 
-			// TODO: Make this a function of userProvince.
 			d3.select("#chartTitle")
-				.text("Riyadh")
+				.text(d.id)
 				.classed("hoverTitle", false)
 				.classed("title", true); 
 		}
