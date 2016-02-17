@@ -100,6 +100,10 @@ div {
 	font: 200 20px/24px 'Roboto', sans-serif;
 }
 
+.hoverable:hover {
+	cursor: pointer;
+}
+
 .menu {
 	position: absolute;
 	width: 200px;

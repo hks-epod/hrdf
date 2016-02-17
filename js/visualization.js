@@ -1,6 +1,6 @@
 /*
 VISUALIZING THE SAUDI WORKFORCE
-Code: https://github.com/hks-epod/hrdf
+Code, coders: https://github.com/hks-epod/hrdf
 Feb 2016
 */
 
@@ -46,48 +46,62 @@ function mouseover(d) {
 		mousecoord = [0,0],
 		mousecoord = d3.mouse(this),
 		style = window.getComputedStyle(this, null),
-		thisColor = style['fill'],
-		thisIndustry = this.parentNode.__data__.industry;
+		thisColor = style['fill'];
+		
+	if (className == "chart") {
+		var thisIndustry = d.industry;
+			totalWorkers = parseFloat(d.Saudi) + parseFloat(d['Non-Saudi']),
+			percentSaudi = parseFloat(d.Saudi) / totalWorkers,
+			percentSaudi = parseInt(percentSaudi * 100),
+			workerSaudi = comma(d.Saudi),
+			workerExpat = comma(d['Non-Saudi']),
+			provinceName = d.province;
 
-	var totalWorkers = parseFloat(this.parentNode.__data__.Saudi) + parseFloat(this.parentNode.__data__['Non-Saudi']),
-		percentSaudi = parseFloat(this.parentNode.__data__.Saudi) / totalWorkers,
-		percentSaudi = parseInt(percentSaudi * 100);
+	} else {
+		var thisIndustry = this.parentNode.__data__.industry,
+			totalWorkers = parseFloat(this.parentNode.__data__.Saudi) + parseFloat(this.parentNode.__data__['Non-Saudi']),
+			percentSaudi = parseFloat(this.parentNode.__data__.Saudi) / totalWorkers,
+			percentSaudi = parseInt(percentSaudi * 100),
+			workerSaudi = comma(this.parentNode.__data__.Saudi),
+			workerExpat = comma(this.parentNode.__data__['Non-Saudi']),
+			provinceName = this.parentNode.getAttribute("id");
 
-	if (className == "donut") {
-		provinceName = this.parentNode.getAttribute("id");
+		if (d.data == this.parentNode.__data__.Saudi) {
+			d3.select("#saudi").style("background-color", "#ffffad");
+			d3.select("#expats").style("background-color", null);
+		} else if (d.data == this.parentNode.__data__['Non-Saudi']) {
+			d3.select("#saudi").style("background-color", null);
+			d3.select("#expats").style("background-color", "#ffb061");
+		}
+
+		d3.select(this)
+			.style("stroke-width", "2px")
+			.style("fill", d3.rgb(thisColor).darker());
+	}
+
+	if (className == "donut" || className == "chart") {
 		d3.select("#caption")
 			.html("<br> There are " + percentSaudi + "% Saudi workers in the " 
 					+ thisIndustry + " industry in " + provinceName + " province.");
 
 		d3.selectAll(".total-workforce").text(null);
 	
-	} else if (className == "pie") {
+	}  else if (className == "pie") {
 		provinceName = this.parentNode.__data__['capital'];
 		
 		d3.select("#caption").text(null);
 		d3.selectAll(".total-workforce").text("Total");
-
 	}
+
+	
+	d3.select("#provinceName").text(provinceName + " province");
+	d3.select("#saudi").text(workerSaudi);
+	d3.select("#expats").text(workerExpat);
+
 
 	d3.select("#tooltip")
 		.style("left", mousecoord[0] + w/2 + "px")
-		.style("top", mousecoord[1] + h/2 + "px");
-
-	d3.select(this)
-		.style("stroke-width", "2px")
-		.style("fill", d3.rgb(thisColor).darker());
-	
-	d3.select("#provinceName").text(provinceName + " province");
-	d3.select("#saudi").text(comma(this.parentNode.__data__.Saudi));
-	d3.select("#expats").text(comma(this.parentNode.__data__['Non-Saudi']));
-
-	if (d.data == this.parentNode.__data__.Saudi) {
-		d3.select("#saudi").style("background-color", "yellow");
-		d3.select("#expats").style("background-color", null);
-	} else if (d.data == this.parentNode.__data__['Non-Saudi']) {
-		d3.select("#saudi").style("background-color", null);
-		d3.select("#expats").style("background-color", "yellow");
-	}
+		.style("top", (mousecoord[1] + h/2 - 150) + "px");
 
 	d3.select("#tooltip").classed("hidden", false);
 };
@@ -311,7 +325,7 @@ function drawPies(csv) {
 			if (i==1) { return "expat"; }
 		})
 		.on("mouseover", mouseover)
-			.on("mouseout", mouseout);
+		.on("mouseout", mouseout);
 
 } //drawPies
 
@@ -350,7 +364,9 @@ function drawBars(new_csv) {
 		.enter()
 		.append("g")
 		.attr("class", function(d) { return "bar " + d.province; })
-		.attr("transform", function(d, i) { return "translate(" + (i * barWidth * 2 + 3*(w/4)) + ",0)"; });
+		.attr("transform", function(d, i) { return "translate(" + (i * barWidth * 2 + 3*(w/4)) + ",0)"; })
+		.on("mouseover", mouseover)
+		.on("mouseout", mouseout);
 
 	// SAUDI 
 	saudiRects = bar.append("rect")
@@ -401,60 +417,65 @@ function drawBars(new_csv) {
 		function update(d) {
 
 			d3.select("path#Riyadh").attr("class", "nomouse");
+			d3.selectAll("path").attr("class", "nomouse hoverable");
 			d3.select(this).attr("class", "moused");
 			userProvince = d.id;
 
-		d3.select("#chartTitle").text(userProvince);
+			d3.select("#chartTitle").text(userProvince);
 
-		filtered = data.filter(function(row) {
-			return row['province'] == userProvince;
-		});
-
-		bar = d3.selectAll('.bar').data(filtered);
-
-		var new_bars = bar.enter()
-			.append("g")
-			.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; })
-			
-		new_bars.append("rect")
-			.attr("width", barWidth)
-			.attr("class", "bars saudi");
-
-		new_bars.append("rect")
-			.attr("width", barWidth)
-			.attr("class","bars expat");
-
-		bar.exit().remove();
-
-		bar.attr("class", function(d) { 
-				return "bar " + d.province; 
+			filtered = data.filter(function(row) {
+				return row['province'] == userProvince;
 			});
-		
-		// UPDATING THE BAR CHART
-		saudiRects = chart.selectAll(".bars.saudi");
-		saudiRects.transition()
-			.attr("height", function(d) { 
-				return y(this.parentNode.__data__.Saudi);
-			})
-			.attr("y", function(d) { 
-				return h/3 - y(this.parentNode.__data__.Saudi); 
+
+			bar = d3.selectAll('.bar').data(filtered);
+
+			var new_bars = bar.enter()
+				.append("g")
+				.attr("transform", function(d, i) { return "translate(" + (i * barWidth + 3*(w/4)) + ",0)"; })
+				
+			new_bars.append("rect")
+				.attr("width", barWidth)
+				.attr("class", "bars saudi");
+
+			new_bars.append("rect")
+				.attr("width", barWidth)
+				.attr("class","bars expat");
+
+			bar.exit().remove();
+
+			bar.attr("class", function(d) { 
+					return "bar " + d.province; 
 				});
 
-		expatRects = chart.selectAll(".bars.expat");
-		expatRects.transition()
-			.attr("height", function(d) {
-				return y(this.parentNode.__data__['Non-Saudi']);	
+			// UPDATING THE BAR CHART
+			saudiRects = chart.selectAll(".bars.saudi");
+			saudiRects.transition()
+				.attr("height", function(d) { 
+					return y(this.parentNode.__data__.Saudi);
 				})
-			.attr("y", function(d) { 
-				return h/3 - y(this.parentNode.__data__.Saudi) - y(this.parentNode.__data__['Non-Saudi']); 
-				});				
+				.attr("y", function(d) { 
+					return h/3 - y(this.parentNode.__data__.Saudi); 
+					});
 
-	} //update func
+			expatRects = chart.selectAll(".bars.expat");
+			expatRects.transition()
+				.attr("height", function(d) {
+					return y(this.parentNode.__data__['Non-Saudi']);	
+					})
+				.attr("y", function(d) { 
+					return h/3 - y(this.parentNode.__data__.Saudi) - y(this.parentNode.__data__['Non-Saudi']); 
+					});				
+
+		} //update func
+
+	// Add tooltips to the barchart?
+
 
 	// HIGHLIGHT THE SELECTED USER PROVINCE
 	d3.select(".map").selectAll("path")
-		.on("mouseover", update)
-			.on("mouseout", demoused);
+		.classed("hoverable", true)
+		.on("click", update);
+		// .on("mouseout", demoused);
 
 		d3.select("path#Riyadh").attr("class", "moused");
 
@@ -547,7 +568,6 @@ function drawDonuts(selectedIndustry) {
 		})
 		.on("mouseover", mouseover)
 		.on("mouseout", mouseout);
-
 }
 
 
